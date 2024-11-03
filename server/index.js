@@ -1,4 +1,5 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
@@ -14,7 +15,7 @@ const jwt = require('jsonwebtoken')
 const salt = bcrypt.genSaltSync(10);
 
 
-const { MONGODB_URL, PORT, SECRET } = process.env;
+const { MONGODB_URL, PORT, SECRET, ADMIN_EMAIL, EMAIL, EMAIL_PASSWORD } = process.env;
 
 if (!MONGODB_URL || !PORT || !SECRET) {
 	console.error(
@@ -97,6 +98,65 @@ app.post('/blog/create_post', uploadMiddleware.single('file'), async(req, res) =
 	res.json(postDoc)
 
 })
+
+// Nodemailer setup
+const transporter = nodemailer.createTransport({
+	host: 'twumasiaugustine.com',
+	port: 465,
+	secure: true,
+	auth: {
+		user: EMAIL, // Your custom domain email address
+		pass: EMAIL_PASSWORD, // Your email password or App Password
+	},
+	tls: {
+		rejectUnauthorized: false,
+	},
+	logger: true,
+	debug: true,
+});
+
+// Verify transporter connection
+transporter.verify(function (error, success) {
+	if (error) {
+		console.error('Error verifying transporter:', error);
+	} else {
+		console.log('Server is ready to take our messages');
+	}
+});
+
+
+// Send message via email
+app.post('/send_message', async (req, res) => {
+	const { name, email,  message } = req.body;
+
+	// Set up email options
+	const mailOptions = {
+		from: `"Twumasi Augustine" <${EMAIL}>`,
+		to: ADMIN_EMAIL,
+		replyTo: ADMIN_EMAIL,
+		subject: `New Message from ${name}`,
+		html: `
+			<h2>Contact Form Submission</h2>
+			<p><strong>Name:</strong> ${name}</p>
+			<p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+			<p><strong>Message:</strong></p>
+			<p>${message}</p>
+			<hr>
+			<p style="font-size: 0.9em;">This message was sent from the contact form on <a href="https://twumasiaugustine.com">twumasiaugustine.com</a></p>
+		`
+	};
+
+	try {
+		// Send the email
+		await transporter.sendMail(mailOptions);
+		res.status(200).json({ message: 'Message sent successfully' });
+	} catch (error) {
+		console.error('Error sending email:', error);
+		res.status(500).json({ message: 'Error sending message' });
+	}
+});
+
+
 // Connect to MongoDB and start the server
 mongoose
 	.connect(MONGODB_URL)
@@ -112,7 +172,7 @@ mongoose
 	})
 	.catch((error) => {
 		console.error('Error connecting to the database', error);
-		process.exit(1); // Exit the process to avoid further issues
+		process.exit(1); 
 	});
 
 // Root endpoint
