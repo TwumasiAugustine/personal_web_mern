@@ -1,37 +1,37 @@
-import { useState, useEffect , useContext} from 'react';
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import { FaHome, FaBookmark, FaUser, FaBars } from 'react-icons/fa';
 import { MdCreate, MdLogout } from 'react-icons/md';
 import { social } from '/src/data.js';
 import Logo from '/src/assets/myphotoencoded.jpeg';
 import { Link, Outlet } from 'react-router-dom';
-import {UserContext} from '/src/UserContext';
+// import { UserContext } from '/context/UserContext';
+
 const NavBar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const {setUserInfo, userInfo} = useContext(UserContext)
-	useEffect(() => {
-		fetch('http://localhost:4000/profile', {
-			credentials: 'include',
-		}).then((response) => {
-			response.json().then((userInfo) => {
-				setUserInfo(userInfo);
-			});
-		});
-	}, []);
+	// const { setUserInfo, userInfo } = useContext(UserContext);
 
-	function logout (){
-		fetch('http://localhost:4000/logout', {
-			credentials: 'include',
-			method: 'POST'
-		})
+	// useEffect(() => {
+	// 	axios
+	// 		.get('http://localhost:4000/profile', { withCredentials: true })
+	// 		.then((response) => setUserInfo(response.data))
+	// 		.catch((error) => console.error('Error fetching profile:', error));
+	// }, [setUserInfo]);
 
-		setUserInfo(null)
-	}
+	const logout = () => {
+		// axios
+		// 	.post('http://localhost:4000/logout', {}, { withCredentials: true })
+		// 	.then(() => setUserInfo(null))
+		// 	.catch((error) => console.error('Error logging out:', error));
+	};
 
-	const username = userInfo?.username;
+	const handleLinkClick = () => setIsOpen(false);
+
+	// const username = userInfo?.username;
 	return (
 		<div>
 			<header className='bg-gray-800 text-white p-4 lg:w-64 lg:h-full lg:fixed lg:flex lg:flex-col lg:justify-between lg:items-center shadow-md lg:px-8'>
-				<div className='flex lg:flex-col justify-between items-center  lg:mb-0'>
+				<div className='flex lg:flex-col justify-between items-center lg:mb-0'>
 					<h1 className='text-2xl font-bold'>
 						<a
 							href='#'
@@ -57,8 +57,7 @@ const NavBar = () => {
 						/>
 						<div className='text-sm mb-3'>
 							Hi, my name is Twumasi Doe. Briefly introduce
-							yourself here. You can also provide a link to the
-							about page.
+							yourself here.
 							<br />
 							<Link
 								to='/'
@@ -86,6 +85,7 @@ const NavBar = () => {
 						<li className='nav-item'>
 							<Link
 								to='/blog'
+								onClick={handleLinkClick}
 								className='nav-link flex items-center'>
 								<FaHome className='mr-2' />
 								Blog Home
@@ -94,6 +94,7 @@ const NavBar = () => {
 						<li className='nav-item'>
 							<Link
 								to='/blog/detail'
+								onClick={handleLinkClick}
 								className='nav-link flex items-center'>
 								<FaBookmark className='mr-2' />
 								Blog Post
@@ -102,43 +103,58 @@ const NavBar = () => {
 						<li className='nav-item'>
 							<Link
 								to='/'
+								onClick={handleLinkClick}
 								className='nav-link flex items-center'>
 								<FaUser className='mr-2' />
 								About Me
 							</Link>
 						</li>
-						{username && (
-							<li className='nav-item'>
-								<Link
-								className='nav-link flex items-center'
-								to='/blog/create'>
-								<MdCreate className='mr-2'/>
-									Create new post
-								</Link>
-								<a href='#' onClick={logout} className='nav-link flex items-center'>
-									<MdLogout className='mr-2'/>
-									Logout
-								</a>
-							</li>
-						)}
-						{!username && (
-							<>
-								<li className='nav-item'>
-									<Link
-										className='nav-link flex items-center'
-										to='/blog/login'>
-										Login
-									</Link>
-								</li>
-								<li className='nav-item'>
-									<Link
-										className='nav-link flex items-center'
-										to='/blog/register'>
-										Register
-									</Link>
-								</li>
-							</>
-						)}
+						<li className='nav-item'>
+							<Link
+								to='/blog/dashboard'
+								onClick={handleLinkClick}
+								className='nav-link flex items-center'>
+								<FaUser className='mr-2' />
+								Dashboard
+							</Link>
+						</li>
+						<li className='nav-item'>
+							<Link
+								to='/blog/create'
+								onClick={handleLinkClick}
+								className='nav-link flex items-center'>
+								<MdCreate className='mr-2' />
+								Create new post
+							</Link>
+						</li>
+						<li className='nav-item'>
+							<a
+								href='#'
+								onClick={() => {
+									logout();
+									handleLinkClick();
+								}}
+								className='nav-link flex items-center'>
+								<MdLogout className='mr-2' />
+								Logout
+							</a>
+						</li>
+						<li className='nav-item'>
+							<Link
+								to='/blog/login'
+								onClick={handleLinkClick}
+								className='nav-link flex items-center'>
+								Login
+							</Link>
+						</li>
+						<li className='nav-item'>
+							<Link
+								to='/blog/register'
+								onClick={handleLinkClick}
+								className='nav-link flex items-center'>
+								Register
+							</Link>
+						</li>
 					</ul>
 					<div className='text-center lg:text-left'>
 						<a

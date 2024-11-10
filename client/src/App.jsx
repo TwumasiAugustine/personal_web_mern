@@ -2,16 +2,16 @@ import LayOut from './pages/LayOut';
 import Home from './pages/Home';
 import Project from './pages/Project';
 import Blog from './pages/Blog';
-import Login from '/src/components/home/blog/Login';
-import Register from '/src/components/home/blog/Register';
-import BlogDetail from '/src/components/home/blog/BlogDetail';
-import NavBar from '/src/components/home/blog/NavBar';
+import Login from './components/home/blog/Login';
+import Register from './components/home/blog/Register';
+import NavBar from './components/home/blog/NavBar';
+import Dashboard from './components/home/blog/Dashboard';
 import CreatePost from './components/home/blog/CreatePost';
 import NoPage from './pages/NoPage';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { UserContextProvider } from './UserContext';
+import { UserContextProvider } from './context/UserContext';
 const App = () => {
 	const helmetContext = {};
 
@@ -40,10 +40,7 @@ const App = () => {
 									index
 									element={<Blog />}
 								/>
-								<Route
-									path='detail'
-									element={<BlogDetail />}
-								/>
+								
 								<Route path='create'
 									element={<CreatePost/>}
 								/>
@@ -54,6 +51,10 @@ const App = () => {
 								<Route
 									path='register'
 									element={<Register />}
+								/>
+								<Route
+									path='dashboard'
+									element={<Dashboard />}
 								/>
 							</Route>
 							<Route
