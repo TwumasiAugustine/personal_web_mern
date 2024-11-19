@@ -5,6 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const formats = [
 	'bold',
@@ -46,6 +47,7 @@ const modules = {
 };
 
 const CreatePost = () => {
+	const [loading, setLoading] = useState(false);
 	const [redirect, setRedirect] = useState(false);
 	const [formData, setFormData] = useState({
 		title: '',
@@ -68,11 +70,11 @@ const CreatePost = () => {
 		data.append('title', formData.title);
 		data.append('summary', formData.summary);
 		data.append('content', formData.content);
-		if (files) data.append('file', files);
-
+		if (files) data.append('thumbnail', files);
+		setLoading(true);
 		try {
 			const response = await axios.post(
-				'http://localhost:4000/blog/create_post',
+				`${serverUrl}/blog/create`,
 				data,
 				{
 					headers: { 'Content-Type': 'multipart/form-data' },
@@ -80,11 +82,14 @@ const CreatePost = () => {
 				}
 			);
 
-			if (response.status === 200) {
+			if (response.status === 201) {
+				alert('Post created successfully');
+				setLoading(false);
 				setRedirect(true);
 			}
 		} catch (err) {
 			alert('Failed to create post: ' + err.message);
+			setLoading(false);
 		}
 	};
 
@@ -96,22 +101,34 @@ const CreatePost = () => {
 		<div className='flex flex-col h-screen justify-center items-center w-full box-border px-2 lg:ml-32'>
 			<h2 className='p-4 font-bold text-3xl'>Create Your Post Here!</h2>
 			<form onSubmit={handleSubmit} className='w-full max-w-[600px]'>
+				<label
+                    htmlFor='title'
+                    className='block text-sm font-medium'>
+                    Title
+                </label>
 				<input
 					className='w-full block p-2 border-[1px] border-[#ccc] mb-2 rounded'
 					name='title'
+					id='title'
 					type='text'
 					value={formData.title}
 					onChange={handleChange}
-					placeholder='Title'
+					placeholder='Write post title here...'
 					required
 				/>
+				<label
+					htmlFor='summary'
+					className='block text-sm font-medium'>
+					Summary
+					</label>
 				<input
 					className='w-full block p-2 border-[1px] border-[#ccc] mb-2 rounded'
+					id='summary'
 					name='summary'
 					type='text'
 					value={formData.summary}
 					onChange={handleChange}
-					placeholder='Summary'
+					placeholder='Write post summary here...'
 					required
 				/>
 				<label
@@ -121,22 +138,33 @@ const CreatePost = () => {
 				</label>
 				<input
 					id='files'
+					name='files'
 					className='hidden'
 					type='file'
 					accept='image/*'
 					onChange={(e) => setFiles(e.target.files[0])}
 				/>
+				<label
+                    htmlFor='content'
+                    className='block text-sm font-medium'>
+                    Content
+                </label>
 				<ReactQuill
+					id='content'
 					value={formData.content}
+					name='content'
 					onChange={(content) => setFormData((prev) => ({ ...prev, content }))}
 					formats={formats}
+					theme='snow'
+					placeholder='Write your post here...'
 					modules={modules}
 					className='mb-2 min-h-32'
 				/>
 				<button
 					className='w-full block mt-2 bg-indigo-600 p-2 text-white rounded'
+					disabled={loading}
 					type='submit'>
-					Create Post
+					{loading ? 'Creating...' : 'Create Post'}
 				</button>
 			</form>
 		</div>

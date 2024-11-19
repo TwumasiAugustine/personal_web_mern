@@ -5,29 +5,28 @@ import { MdCreate, MdLogout } from 'react-icons/md';
 import { social } from '/src/data.js';
 import Logo from '/src/assets/myphotoencoded.jpeg';
 import { Link, Outlet } from 'react-router-dom';
-// import { UserContext } from '/context/UserContext';
-
+import { UserContext } from '/src/context/UserContext';
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 const NavBar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	// const { setUserInfo, userInfo } = useContext(UserContext);
+	const { setUserInfo, userInfo } = useContext(UserContext);
 
-	// useEffect(() => {
-	// 	axios
-	// 		.get('http://localhost:4000/profile', { withCredentials: true })
-	// 		.then((response) => setUserInfo(response.data))
-	// 		.catch((error) => console.error('Error fetching profile:', error));
-	// }, [setUserInfo]);
+	const {role } = userInfo;
+	const userRole = role?.includes('admin')
+    const username = userInfo?.username
 
-	const logout = () => {
-		// axios
-		// 	.post('http://localhost:4000/logout', {}, { withCredentials: true })
-		// 	.then(() => setUserInfo(null))
-		// 	.catch((error) => console.error('Error logging out:', error));
+	const logout = async () => {
+		try {
+			await axios.post(`${serverUrl}/logout`, {}, { withCredentials: true });
+			setUserInfo(null);
+			alert('Logout successfully')
+			window.location.reload();
+		} catch (error) {
+			console.error('Error logging out:', error);
+		}
 	};
 
 	const handleLinkClick = () => setIsOpen(false);
-
-	// const username = userInfo?.username;
 	return (
 		<div>
 			<header className='bg-gray-800 text-white p-4 lg:w-64 lg:h-full lg:fixed lg:flex lg:flex-col lg:justify-between lg:items-center shadow-md lg:px-8'>
@@ -109,7 +108,7 @@ const NavBar = () => {
 								About Me
 							</Link>
 						</li>
-						<li className='nav-item'>
+						{userRole && (<li className='nav-item'>
 							<Link
 								to='/blog/dashboard'
 								onClick={handleLinkClick}
@@ -117,8 +116,8 @@ const NavBar = () => {
 								<FaUser className='mr-2' />
 								Dashboard
 							</Link>
-						</li>
-						<li className='nav-item'>
+						</li>)}
+						{username && (<li className='nav-item'>
 							<Link
 								to='/blog/create'
 								onClick={handleLinkClick}
@@ -126,8 +125,8 @@ const NavBar = () => {
 								<MdCreate className='mr-2' />
 								Create new post
 							</Link>
-						</li>
-						<li className='nav-item'>
+						</li>)}
+						{username && (<li className='nav-item'>
 							<a
 								href='#'
 								onClick={() => {
@@ -138,23 +137,23 @@ const NavBar = () => {
 								<MdLogout className='mr-2' />
 								Logout
 							</a>
-						</li>
-						<li className='nav-item'>
+						</li>)}
+						{!username && (<li className='nav-item'>
 							<Link
 								to='/blog/login'
 								onClick={handleLinkClick}
 								className='nav-link flex items-center'>
 								Login
 							</Link>
-						</li>
-						<li className='nav-item'>
+						</li>)}
+						{!username && (<li className='nav-item'>
 							<Link
-								to='/blog/register'
+								to='/blog/signup'
 								onClick={handleLinkClick}
 								className='nav-link flex items-center'>
 								Register
 							</Link>
-						</li>
+						</li>)}
 					</ul>
 					<div className='text-center lg:text-left'>
 						<a

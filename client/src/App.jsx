@@ -49,7 +49,7 @@ const App = () => {
 									element={<Login />}
 								/>
 								<Route
-									path='register'
+									path='signup'
 									element={<Register />}
 								/>
 								<Route

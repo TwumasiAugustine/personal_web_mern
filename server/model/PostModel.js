@@ -19,6 +19,10 @@ const PostSchema = new Schema({
     thumbnail: {
         type: String
     },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     comments: [
         {
             user: {
