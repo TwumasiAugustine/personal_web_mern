@@ -29,7 +29,7 @@ const NavBar = () => {
 	const handleLinkClick = () => setIsOpen(false);
 	return (
 		<div>
-			<header className='bg-gray-800 text-white p-4 lg:w-64 lg:h-full lg:fixed lg:flex lg:flex-col lg:justify-between lg:items-center shadow-md lg:px-8'>
+			<header className='bg-gray-800 text-white p-4 lg:w-64 lg:h-full lg:fixed lg:flex lg:flex-col lg:justify-between lg:items-center shadow-md lg:px-8 z-20'>
 				<div className='flex lg:flex-col justify-between items-center lg:mb-0'>
 					<h1 className='text-2xl font-bold'>
 						<a

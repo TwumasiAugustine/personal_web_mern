@@ -98,7 +98,7 @@ const CreatePost = () => {
 	}
 
 	return (
-		<div className='flex flex-col h-screen justify-center items-center w-full box-border px-2 lg:ml-32'>
+		<div className='flex flex-col h-100 justify-center items-center w-full box-border px-2 my-5 lg:ml-32'>
 			<h2 className='p-4 font-bold text-3xl'>Create Your Post Here!</h2>
 			<form onSubmit={handleSubmit} className='w-full max-w-[600px]'>
 				<label

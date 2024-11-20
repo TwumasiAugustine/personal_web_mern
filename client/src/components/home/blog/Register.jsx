@@ -31,7 +31,7 @@ const Register = () => {
 		e.preventDefault();
 
 		console.log(formData)
-		const {username, email, password, confirm_password, roles: role } = formData;
+		const {username, email, password, confirm_password, roles } = formData;
 		if (password !== confirm_password) {
 			return alert('Password and Confirm Password do not match');
 		}
@@ -39,7 +39,7 @@ const Register = () => {
 		try {
 			const response = await axios.post(
 				`${serverUrl}/blog/signup`,
-				{username, password, email, role},
+				{username, password, email, roles},
 				{
 					headers: { 'Content-Type': 'application/json' },
 					withCredentials: true,

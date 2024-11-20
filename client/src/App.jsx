@@ -7,6 +7,7 @@ import Register from './components/home/blog/Register';
 import NavBar from './components/home/blog/NavBar';
 import Dashboard from './components/home/blog/Dashboard';
 import CreatePost from './components/home/blog/CreatePost';
+import PostDetail from './components/home/blog/PostDetail';
 import NoPage from './pages/NoPage';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -40,7 +41,10 @@ const App = () => {
 									index
 									element={<Blog />}
 								/>
-								
+								<Route
+									path=':id'
+									element={<PostDetail />}
+								/>
 								<Route path='create'
 									element={<CreatePost/>}
 								/>
