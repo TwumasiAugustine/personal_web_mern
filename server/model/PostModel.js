@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
+const commentSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    text: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+});
+const likeSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+});
+
+
 const PostSchema = new Schema(
 	{
 		title: {
@@ -26,36 +36,8 @@ const PostSchema = new Schema(
 		author: {
 			type: String
 		},
-		comments: [
-			{
-				user: {
-					type: Schema.Types.ObjectId,
-					ref: 'User',
-					required: true,
-				},
-				text: {
-					type: String,
-					required: true,
-					trim: true,
-				},
-				createdAt: {
-					type: Date,
-					default: Date.now,
-				},
-				updatedAt: {
-					type: Date,
-					default: Date.now,
-				},
-			},
-		],
-		likes: [
-			{
-				user: {
-					type: Schema.Types.ObjectId,
-					ref: 'User',
-				},
-			},
-		],
+		comments: [commentSchema],
+        likes: [likeSchema]
 	},
 	{
 		timestamps: true,

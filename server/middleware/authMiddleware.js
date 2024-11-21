@@ -1,31 +1,39 @@
 const jwt = require('jsonwebtoken');
-const { SECRET } = process.env;
+const User = require('../model/UserModel');
 
-const auth = (roles = []) => (req, res, next) => {
-    const token = req.cookies.token || (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]);
+const auth = async (req, res, next) => {
+	const token = req.headers.authorization?.split(' ')[1] || req.cookies.token;
+	if (!token) return res.status(401).json({ error: 'Unauthorized' });
 
+	try {
+		const decoded = jwt.verify(token, process.env.SECRET_KEY);
+		const user = await User.findById(decoded.userId);
+		console.log(user)
+		if (!user) return res.status(404).json({ error: 'User not found' });
+
+		req.user = { id: user._id, username: user.username };
+		next();
+	} catch (err) {
+		res.status(401).json({ error: 'Invalid token' });
+	}
+};
+
+
+const authenticate = (req, res, next) => {
+    const token = req.cookies.token;
     if (!token) {
-        return res.status(401).send({ message: 'Access denied. No token provided.' });
+        return res.status(401).json({ message: 'Please, login to access this resource.' });
     }
 
-    jwt.verify(token, SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
         if (err) {
-            return res.status(401).send({ message: 'Access denied. Invalid token.' });
+            return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        if (roles.length && decoded.role && !roles.includes(decoded.role)) {
-            return res.status(403).send({ message: 'Access denied. Insufficient permissions.' });
-        }
-
-        req.user = {
-            _id: decoded._id,
-            username: decoded.username,
-            email: decoded.email,
-            role: decoded.role,
-        };
-
+        req.user ={ ...user, id:user.userId};
         next();
     });
 };
 
-module.exports = auth;
+
+module.exports = authenticate;

@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const Post = require('../model/PostModel');
+const { error } = require('console');
 
 const UploadFile = multer({ dest: 'uploads/' });
 
@@ -10,7 +11,7 @@ const PostBlog = async (req, res) => {
 		const { title, content, summary } = req.body;
 		const thumbnail = req.file;
 
-		if (!title || !content || !summary) {
+		if (!title || !content || !summary || !thumbnail) {
 			return res
 				.status(400)
 				.json({ message: 'All fields are required.' });
@@ -29,6 +30,7 @@ const PostBlog = async (req, res) => {
 			title,
 			content,
 			summary,
+			author: req.user.username,
 			path: newFilePath,
 		});
 
@@ -83,15 +85,15 @@ const GetPostById = async (req, res) => {
 
 		// Fetch additional posts (3 most recent posts)
 		const additionalPosts = await Post.find()
-			.sort({ createdAt: -1 }) 
-			.limit(3) 
-			.select('_id title summary'); 
+			.sort({ createdAt: -1 })
+			.limit(3)
+			.select('_id title summary');
 
 		res.json({
 			post,
 			prevPostId,
 			nextPostId,
-			additionalPosts, 
+			additionalPosts,
 		});
 	} catch (err) {
 		console.error('Error fetching post:', err.message);
@@ -99,9 +101,115 @@ const GetPostById = async (req, res) => {
 	}
 };
 
+// FIX Add a comment
+const AddComment = async (req, res) => {
+	const { id } = req.params;
+	const { text } = req.body;
+
+	if (!text || text.trim() === '') {
+		return res.status(400).json({ error: 'Comment text is required' });
+	}
+
+	try {
+		const post = await Post.findById(id);
+		if (!post) {
+			return res.status(404).json({ error: 'Post not found' });
+		}
+
+		console.log(req.user.id);
+
+		if (!req.user || !req.user.id) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
+
+		const comment = {
+			user: req.user.id,
+			text,
+			createdAt: new Date(),
+		};
+
+		post.comments.push(comment);
+		await post.save();
+
+		res.status(200).json({
+			message: 'Comment added successfully',
+			comment,
+		});
+	} catch (err) {
+		console.error('Error adding comment:', err);
+		res.status(500).json({ error: 'Failed to add comment' });
+	}
+};
+
+// Get comments for a post
+const GetComments = async (req, res) => {
+	try {
+		const { postId } = req.params;
+		const post = await Post.findById(postId).populate(
+			'comments.user',
+			'username',
+		);
+
+		if (!post) return res.status(404).json({ error: 'Post not found' });
+
+		const comments = post.comments.map((comment) => ({
+			...comment.toObject(),
+			username: comment.user.username,
+		}));
+
+		res.status(200).json({ comments });
+	} catch (err) {
+		res.status(500).json({ error: 'Failed to fetch comments' });
+	}
+};
+
+// Like a post
+const LikePost = async (req, res) => {
+	const postId = req.params.id;
+	const userId = req.user.id;
+
+	try {
+		const post = await Post.findById(postId);
+		if (!post) {
+			return res.status(404).json({ error: 'Post not found' });
+		}
+		//  Check if user is authenticated
+		// Check if the user has already liked the post
+		if (post.likes.includes(userId)) {
+			return res
+				.status(400)
+				.json({ error: 'You already liked this post' });
+		}
+
+		// Add user to likes
+		post.likes.push(userId);
+		await post.save();
+		res.status(200).json({ message: 'Post liked successfully' });
+	} catch (err) {
+		res.status(500).json({ error: 'Failed to like the post' });
+	}
+};
+
+// Get like count
+const GetLikeCount = async (req, res) => {
+	try {
+		const { postId } = req.params;
+
+		const post = await Post.findById(postId);
+		if (!post) return res.status(404).json({ error: 'Post not found' });
+
+		res.status(200).json({ likeCount: post.likes.length });
+	} catch (err) {
+		res.status(500).json({ error: 'Failed to fetch like count' });
+	}
+};
 module.exports = {
 	PostBlog,
 	UploadFile,
 	GetBlogPosts,
 	GetPostById,
+	AddComment,
+	GetComments,
+	LikePost,
+	GetLikeCount,
 };

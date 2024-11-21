@@ -35,7 +35,7 @@ const SingleBlogPost = ({ post }) => {
 						<div className='flex items-center gap-2'>
 							<span className='text-gray-400'>Published by</span>
 							<span className='font-semibold'>
-								{author?.username} Twumasi
+								{author} Twumasi
 							</span>
 						</div>
 						<span className='text-gray-400'>|</span>

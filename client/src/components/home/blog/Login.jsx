@@ -41,12 +41,8 @@ const Login = () => {
 			if (response.status === 200) {
 				alert('Successfully logged in');
 				navigate('/blog');
-				window.location.reload();
 				setLoading(false);
-			} else {
-				alert('Wrong credentials');
-				setLoading(false);
-			}
+			} 
 		} catch (err) {
 			alert('Error: ' + err.message);
 			setLoading(false);

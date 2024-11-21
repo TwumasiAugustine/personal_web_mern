@@ -64,8 +64,9 @@ const LogIn = async (req, res) => {
                     if (err) throw err;
                     res.cookie('token', token, {
                         httpOnly: true,
-                        secure: true,
+                        secure: true ,
                         sameSite: 'none',
+                        maxAge: 3600000
                     }).json({
                         id: userDoc._id,
                         username,

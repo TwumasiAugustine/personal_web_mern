@@ -11,7 +11,7 @@ const BlogPosts = () => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const postsPerPage = 5; 
+    const postsPerPage = 3; 
 
 
     const fetchBlogPosts = async (page) => {
