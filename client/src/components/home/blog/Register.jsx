@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import SEO from '/src/pages/SEO';
+import Footer from '../Footer';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -27,11 +28,10 @@ const Register = () => {
 		}));
 	};
 
+	const {username, email, password, confirm_password, roles } = formData;
 	const handleRegister = async (e) => {
 		e.preventDefault();
 
-		console.log(formData)
-		const {username, email, password, confirm_password, roles } = formData;
 		if (password !== confirm_password) {
 			return alert('Password and Confirm Password do not match');
 		}
@@ -49,18 +49,26 @@ const Register = () => {
 			if (response.status === 201) {
 				alert('Registration successful! You can now log in.');
 				navigate('/blog/login')
-			} else {
-				alert('Failed to register. Please try again.');
-				setLoading(false);
-			}
+			} 
 		} catch (err) {
-			alert('Error: ' + err.message);
+			const errorMessage =
+            err.response?.data?.message || 'An unexpected error occurred';
+            alert(errorMessage);
+		} finally {
 			setLoading(false);
+			setFormData({
+				username: '',
+				email: '',
+                password: '',
+                confirm_password: '',
+                roles: ['user']
+			})
 		}
 	};
 
 	return (
-		<div className='flex flex-col justify-center items-center h-screen w-100 p-4 lg:ml-32'>
+		<>
+		<div className='flex flex-col justify-center items-center h-screen w-full p-4'>
 			<SEO
 				title='Blog Sign Up'
 				description="Sign Up for Twumasi's blog post"
@@ -70,7 +78,7 @@ const Register = () => {
 			<h2 className='mb-5 p-2 font-bold text-xl'>Sign Up</h2>
 			<form
 				onSubmit={handleRegister}
-				className='text-black w-full max-w-[400px]'
+				className='text-black w-full max-w-[400px] shadow-md p-5'
 			>
 				<input
 					required
@@ -80,7 +88,7 @@ const Register = () => {
 					className='border-[1px] outline-none focus:border-indigo-500 border-[#ccc] w-full p-2 block mb-2 rounded'
 					type='text'
 					name='username'
-					value={formData.username}
+					value={username}
 					onChange={handleFormDataChange}
 					placeholder='Username'
 				/>
@@ -91,7 +99,7 @@ const Register = () => {
 					className='border-[1px] outline-none focus:border-indigo-500 border-[#ccc] w-full p-2 block mb-2 rounded'
 					type='email'
 					name='email'
-					value={formData.email}
+					value={email}
 					onChange={handleFormDataChange}
 					placeholder='Email'
 				/>
@@ -103,7 +111,7 @@ const Register = () => {
 						className='border-[1px] outline-none focus:border-indigo-500 border-[#ccc] w-full p-2 block rounded'
 						type={showPassword ? 'text' : 'password'}
 						name='password'
-						value={formData.password}
+						value={password}
 						autoComplete='current-password'
 						onChange={handleFormDataChange}
 						placeholder='Password'
@@ -123,7 +131,7 @@ const Register = () => {
 						className='border-[1px] outline-none focus:border-indigo-500 border-[#ccc] w-full p-2 block rounded'
 						type={showConfirmPassword ? 'text' : 'password'}
 						name='confirm_password'
-						value={formData.confirm_password}
+						value={confirm_password}
 						autoComplete='current-password'
 						onChange={handleFormDataChange}
 						placeholder='Confirm Password'
@@ -137,7 +145,7 @@ const Register = () => {
 				</div>
 
 				<button
-					className='w-full p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm'
+					className='w-full p-2 bg-indigo-600 hover:bg-indigo-500 disabled:cursor-not-allowed text-white rounded-sm'
 					tabIndex={0}
 					disabled={loading}
 					type='submit'
@@ -145,7 +153,9 @@ const Register = () => {
 					{loading ? 'Signing Up...' : 'Sign Up'}
 				</button>
 			</form>
-		</div>
+			</div>
+			<Footer />
+			</>
 	);
 };
 

@@ -5,8 +5,8 @@ import ProjectModal from '../components/home/project/ProjectModal';
 import SEO from './SEO.jsx'
 import { projects } from '../data.js';
 import { motion } from 'framer-motion';
-
 const ProjectCard = lazy(() => import('../components/home/project/ProjectCard'));
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const Project = () => {
 	const [selectedProject, setSelectedProject] = useState(null);
@@ -62,7 +62,7 @@ const Project = () => {
 				description='Personal project and application section'
 				type='website'
 				name='Twumasi Augustine'
-			/>
+				/>
 			<FilterBar onFilterChange={setFilter} />
 			<Suspense
 				fallback={

@@ -11,7 +11,6 @@ const SingleBlogPost = ({ post }) => {
 	const postDate = new Date(createdAt);
 	const formattedDate = postDate.toLocaleDateString();
 	const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
-
 	return (
 		<div className='mb-8'>
 			<div className='flex justify-center lg:items-center gap-5'>
@@ -53,7 +52,7 @@ const SingleBlogPost = ({ post }) => {
 					</Link>
 					<div className='flex gap-10 text-gray-600 text-sm mt-3'>
 						<span className='flex items-center gap-1 cursor-pointer'>
-							<BiLike /> {likes || 0}
+							<BiLike /> {likes.length || 0}
 						</span>
 						<span className='flex items-center justify-center w-100 gap-1'>
 							<FaCommentDots /> {comments.length}

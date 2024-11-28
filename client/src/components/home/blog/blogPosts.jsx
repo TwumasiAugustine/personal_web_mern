@@ -1,46 +1,15 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy,  useContext
+    
+ } from 'react';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
-import axios from 'axios';
 
 const SingleBlogPost = lazy(() => import('./singleBlogPost.jsx'));
-const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { UserContext } from '../../../context/UserContext.jsx';
 
 const BlogPosts = () => {
-    const [blogPosts, setBlogPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const postsPerPage = 3; 
+    
 
-
-    const fetchBlogPosts = async (page) => {
-        setLoading(true);
-        try {
-            const response = await axios.get(
-                `${serverUrl}/blog/posts?page=${page}&limit=${postsPerPage}`
-            );
-            setBlogPosts(response.data.posts);
-            setTotalPages(response.data.totalPages); 
-            setLoading(false);
-        } catch (err) {
-            console.error('Error fetching blog posts:', err);
-            setError('Failed to load blog posts.');
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchBlogPosts(currentPage);
-    }, [currentPage]);
-
-    const handlePrevPage = () => {
-        if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
-    };
-
-    const handleNextPage = () => {
-        if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
-    };
+    const {blogPosts, loading, error, currentPage, totalPages, handleNextPage, handlePrevPage} = useContext(UserContext);
 
     if (loading) {
         return (
@@ -59,7 +28,7 @@ const BlogPosts = () => {
     }
 
     return (
-        <div className='container single-col-max-width my-12 pr-5'>
+        <div className='container px-4 max-w-5xl bg-white mx-auto single-col-max-width my-12 pr-5'>
             <Suspense
                 fallback={
                     <div className='flex justify-center items-center h-screen w-full text-black'>

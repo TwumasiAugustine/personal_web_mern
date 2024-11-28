@@ -16,7 +16,7 @@ const FilterBar = ({ onFilterChange }) => {
 	};
 
 	return (
-		<div className='flex  justify-between items-center pt-16 w-full'>
+		<div className='flex  justify-between items-center w-full'>
 			<div className='flex justify-between items-center space-x-4 w-full'>
 				<label className='block text-sm font-medium '>
 					Category:

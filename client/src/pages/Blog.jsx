@@ -1,15 +1,18 @@
-import BlogHome from '/src/components/home/blog/BlogHome';
+import Footer from '../components/home/Footer';
+import BlogPosts from '../components/home/blog/blogPosts';
+
 import SEO from './SEO';
 const Blog = () => {
 	return (
-		<div className='flex flex-col  lg:justify-between  container-fluid bg-white'>
+		<div>
 			<SEO
-				title='Twumasi&apos;s Blog'
+				title='Blog'
 				description='Personal blog for Twumasi'
-				type='Personal blog'
+				type='Personal Blog'
 				name='Twumasi Augustine'
 			/>
-			<BlogHome />
+			<BlogPosts />
+			<Footer />
 		</div>
 	);
 };

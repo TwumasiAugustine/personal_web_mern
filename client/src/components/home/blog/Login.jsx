@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import SEO from '/src/pages/SEO';
-
+import Footer from '../Footer';
+import {UserContext} from '../../../context/UserContext'
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const Login = () => {
@@ -13,7 +14,8 @@ const Login = () => {
 	});
 
 	const [loading, setLoading] = useState(false);
-	const [showPassword, setShowPassword] = useState(false); 
+	const [showPassword, setShowPassword] = useState(false);
+	const {setUserInfo, userInfo} = useContext(UserContext);
 	const navigate = useNavigate();
 
 	const handleChange = (e) => {
@@ -24,33 +26,40 @@ const Login = () => {
 		}));
 	};
 
+	const {username, password } = formData;
 	const handleLogin = async (e) => {
-		e.preventDefault();
-		const {username, password } = formData;
-		setLoading(true);
-		try {
-			const response = await axios.post(
-				`${serverUrl}/blog/login`,
-				{username, password},
-				{
-					headers: { 'Content-Type': 'application/json' },
-					withCredentials: true,
-				}
-			);
+    e.preventDefault();
+    setLoading(true);
+    try {
+        const response = await axios.post(
+            `${serverUrl}/blog/login`,
+            { username, password },
+            {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true,
+            }
+        );
 
-			if (response.status === 200) {
-				alert('Successfully logged in');
-				navigate('/blog');
-				setLoading(false);
-			} 
-		} catch (err) {
-			alert('Error: ' + err.message);
-			setLoading(false);
-		}
-	};
+        if (response.status === 200) {
+            setUserInfo({ username: response.data.username });
+            navigate('/blog');
+        }
+    } catch (err) {
+        const errorMessage =
+            err.response?.data?.message || 'An unexpected error occurred';
+        alert(errorMessage); 
+    } finally {
+        setLoading(false);
+        setFormData({
+            username: '',
+            password: '',
+        });
+    }
+};
 
 	return (
-		<div className='flex flex-col justify-center items-center h-screen w-full p-4 box-border lg:ml-32'>
+		<>
+		<div className='flex flex-col justify-center items-center h-[76vh] w-full p-4 box-border '>
 			<SEO
 				title='Blog Login'
 				description="Login to Twumasi's blog post"
@@ -62,7 +71,7 @@ const Login = () => {
 				<input
 					id='username'
 					name='username'
-					value={formData.username}
+					value={username}
 					onChange={handleChange}
 					autoFocus
 					autoComplete='username'
@@ -74,7 +83,7 @@ const Login = () => {
 					<input
 						id='password'
 						name='password'
-						value={formData.password}
+						value={password}
 						onChange={handleChange}
 						className='border-[1px] outline-none focus:border-indigo-500 border-[#ccc] w-full p-2 block rounded'
 						type={showPassword ? 'text' : 'password'}
@@ -88,14 +97,16 @@ const Login = () => {
 					</span>
 				</div>
 				<button
-					className='w-full p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm'
+					className='w-full p-2 bg-indigo-600 hover:bg-indigo-500 disabled:cursor-not-allowed text-white rounded-sm'
 					disabled={loading}
 					type='submit'
 				>
 					{loading ? 'Logging in...' : 'Login'}
 				</button>
 			</form>
-		</div>
+			</div>
+			<Footer/>
+			</>
 	);
 };
 

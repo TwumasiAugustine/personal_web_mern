@@ -1,8 +1,10 @@
+import { BiArrowBack } from "react-icons/bi";
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
 import SEO from '/src/pages/SEO';
+import Footer from '../Footer';
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
@@ -30,38 +32,35 @@ const PostDetail = () => {
 				setLoading(false);
 			})
 			.catch((err) => {
-				setError('Failed to load post', err);
+				setError('Failed to load post');
 				setLoading(false);
 			});
 	}, [id]);
 
-	const handleLike = () => {
-		axios
-			.post(`${serverUrl}/blog/post/${id}/like`, null, {
-				withCredentials: true, 
-			})
-			.then(() => setLikes((prev) => prev + 1))
-			.catch((error) => {
-				console.error('Error liking post:', error);
-				alert('Failed to like the post. Please try again later.');
-			});
+	// Handle like button click
+	const handleLike = async () => {
+		try {
+            await axios.post(`${serverUrl}/blog/post/${id}/like`, null, {
+                withCredentials: true,
+            });
+            setLikes(likes + 1);
+        } catch (error) {
+            alert(error.response?.data?.message || 'An unexpected error occurred');
+        }
 	};
 
+	// Handle comment submission
 	const handleCommentSubmit = async (e) => {
 		e.preventDefault();
-
 		if (!newComment.trim()) {
 			alert('Comment cannot be empty');
 			return;
 		}
-
 		try {
 			const response = await axios.post(
 				`${serverUrl}/blog/post/${id}/comment`,
 				{ text: newComment },
-				{
-					withCredentials: true,
-				},
+				{ withCredentials: true }
 			);
 			setComments((prevComments) => [
 				...prevComments,
@@ -69,17 +68,18 @@ const PostDetail = () => {
 			]);
 			setNewComment('');
 		} catch (error) {
-			console.error('Error adding comment:', error);
 			alert('Failed to add comment. Please try again later.');
 		}
 	};
 
+	// Navigate to related post
 	const handleRelatedPostClick = (e, postId) => {
 		e.preventDefault();
 		navigate(`/blog/${postId}`);
 		window.scrollTo(0, 0);
 	};
 
+	// Share content on social media platforms
 	const handleShare = (platform) => {
 		const shareUrl = `${window.location.origin}/blog/${id}`;
 		const encodedTitle = encodeURIComponent(post.title);
@@ -105,8 +105,9 @@ const PostDetail = () => {
 		window.open(url, '_blank');
 	};
 
-	if (loading) return <div>Loading...</div>;
-	if (error) return <div>{error}</div>;
+	// Loading and error handling
+	if (loading) return <div className='flex justify-center items-center w-full h-screen'>Loading...</div>;
+	if (error) return <div className='flex justify-center items-center w-full h-screen text-red-800'>{error}</div>;
 
 	return (
 		<div>
@@ -116,21 +117,17 @@ const PostDetail = () => {
 				type='Article'
 				name='Twumasi Augustine'
 			/>
-			<div className='post-detail max-w-5xl mx-auto p-6'>
+			<div className='post-detail bg-white max-w-5xl mx-auto p-6'>
+				<Link to='/blog' className='flex items-center my-2 text-indigo-600 hover:underline'>
+                    <BiArrowBack /> Back
+                </Link>
 				<header className='border-b pb-4 mb-6'>
-					<h1 className='text-3xl font-bold text-gray-800'>
-						{post.title}
-					</h1>
+					<h1 className='text-3xl font-bold text-black-800'>{post.title}</h1>
 					<div className='flex items-center gap-4 text-sm text-gray-500 mt-2'>
-						<span>
-							{new Date(post.createdAt).toLocaleDateString()}
-						</span>
-						<span>
-							{formatDistanceToNow(new Date(post.createdAt), {
-								addSuffix: true,
-							})}
-						</span>
+						<span>{new Date(post.createdAt).toLocaleDateString()}</span>
+						<span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</span>
 						<span>{comments.length} comments</span>
+						<span>{`${likes} ${likes > 1 ? 'likes' : 'like'}`}</span>
 					</div>
 				</header>
 				<section className='mb-10'>
@@ -142,8 +139,8 @@ const PostDetail = () => {
 				<div className='mb-8 flex items-center gap-6'>
 					<button
 						onClick={handleLike}
-						className='px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700'>
-						👍 Like {likes}
+						className='px-4 py-2 bg-indigo-800 text-white text-sm font-semibold rounded hover:bg-indigo-600'>
+						👍 {likes}
 					</button>
 					<div className='flex gap-4'>
 						<button
@@ -168,42 +165,27 @@ const PostDetail = () => {
 						</button>
 					</div>
 				</div>
-				<section
-					id='comments'
-					className='mb-10'>
+				<section id='comments' className='mb-10'>
 					<h2 className='text-2xl font-semibold mb-4'>Comments</h2>
 					{comments.length > 0 ? (
 						<ul className='space-y-4'>
 							{comments.map((comment) => (
-								<li
-									key={comment._id}
-									className='p-4 bg-gray-100 rounded shadow-sm'>
-									<p className='font-semibold text-gray-800'>
-										{comment.username}
-									</p>
-									<p className='text-gray-800'>
-										{comment.text}
-									</p>
+								<li key={comment._id} className='p-4 bg-gray-100 rounded shadow-sm'>
+									<p className='font-semibold text-gray-800'>{comment.username}</p>
+									<p className='text-gray-800'>{comment.text}</p>
 									<small className='text-gray-500'>
-										{formatDistanceToNow(
-											new Date(comment.createdAt),
-											{
-												addSuffix: true,
-											},
-										)}
+										{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
 									</small>
 								</li>
 							))}
 						</ul>
 					) : (
-						<p className='text-gray-500'>
-							No comments yet. Be the first to comment!
-						</p>
+						<p className='text-gray-500'>No comments yet. Be the first to comment!</p>
 					)}
-					<form
-						onSubmit={handleCommentSubmit}
-						className='mt-6'>
+					<form onSubmit={handleCommentSubmit} className='mt-6'>
 						<textarea
+							id='comment'
+							name='comment'
 							value={newComment}
 							onChange={(e) => setNewComment(e.target.value)}
 							className='w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -218,31 +200,23 @@ const PostDetail = () => {
 					</form>
 				</section>
 				<section>
-					<h2 className='text-2xl font-semibold mb-4'>
-						Related Posts
-					</h2>
+					<h2 className='text-2xl font-semibold mb-4'>Related Posts</h2>
 					<ul className='space-y-4'>
 						{additionalPosts.map((relatedPost) => (
 							<li key={relatedPost._id}>
-								<a
-									href={`/blog/${relatedPost._id}`}
-									onClick={(e) =>
-										handleRelatedPostClick(
-											e,
-											relatedPost._id,
-										)
-									}
+								<Link
+									to={`/blog/${relatedPost._id}`}
+									onClick={(e) => handleRelatedPostClick(e, relatedPost._id)}
 									className='text-lg font-semibold text-indigo-600 hover:underline'>
 									{relatedPost.title}
-								</a>
-								<p className='text-sm text-gray-500'>
-									{relatedPost.summary}
-								</p>
+								</Link>
+								<p className='text-sm text-gray-500'>{relatedPost.summary}</p>
 							</li>
 						))}
 					</ul>
 				</section>
 			</div>
+			<Footer />
 		</div>
 	);
 };

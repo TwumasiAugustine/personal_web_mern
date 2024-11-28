@@ -8,6 +8,14 @@ export const navigation = [
 	{ id: 6, name: 'Project', to: '/project' },
 	{ id: 7, name: 'Blog', to: '/blog' },
 ];
+
+export const specNav = [
+	{ id: 1, name: 'Dashboard', to: '/dashboard' },
+	{ id: 2, name: 'Signup', to: '/blog/signup' },
+    { id: 3, name: 'Login', to: '/blog/login' },
+    { id: 4, name: 'Logout', to: '/blog/logout' },
+]
+
 // Projects Data
 export const projects = [
 	{

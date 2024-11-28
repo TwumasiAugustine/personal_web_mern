@@ -100,6 +100,49 @@ const GetPostById = async (req, res) => {
 		res.status(500).json({ message: 'Failed to fetch post' });
 	}
 };
+// Update Post By id
+const UpdatePost = async (req, res) => {
+	const { id } = req.params;
+	const { title, content, summary } = req.body;
+	console.log('Updating post with data:', { title, content, summary });
+
+	try {
+		const updatedPost = await Post.findByIdAndUpdate(
+			id,
+			{ title, content, summary },
+			{ new: true, runValidators: true },
+		);
+
+		if (!updatedPost) {
+			return res.status(404).json({ message: 'Post not found' });
+		}
+		res.status(200).json({
+			message: 'Post updated successfully',
+			post: updatedPost,
+		});
+	} catch (error) {
+		console.error('Error updating post:', error);
+		res.status(500).json({
+			message: 'An error occurred while updating the post',
+			error: error.message,
+		});
+	}
+};
+
+//  Delete Post by id
+const DeletePost = async (req, res) => {
+	const { id } = req.params;
+	try {
+		const post = await Post.findByIdAndDelete(id);
+		if (!post) {
+			return res.status(404).json({ message: 'Post not found' });
+		}
+		res.json({ message: 'Post deleted successfully' });
+	} catch (err) {
+		console.error('Error deleting post:', err.message);
+		res.status(500).json({ message: 'Failed to delete post' });
+	}
+};
 
 // FIX Add a comment
 const AddComment = async (req, res) => {
@@ -173,7 +216,7 @@ const LikePost = async (req, res) => {
 		if (!post) {
 			return res.status(404).json({ error: 'Post not found' });
 		}
-		//  Check if user is authenticated
+
 		// Check if the user has already liked the post
 		if (post.likes.includes(userId)) {
 			return res
@@ -205,6 +248,8 @@ const GetLikeCount = async (req, res) => {
 };
 module.exports = {
 	PostBlog,
+	UpdatePost,
+	DeletePost,
 	UploadFile,
 	GetBlogPosts,
 	GetPostById,

@@ -64,12 +64,13 @@ const CreatePost = () => {
 		}));
 	};
 
+	const {title, summary, content } = formData;
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const data = new FormData();
-		data.append('title', formData.title);
-		data.append('summary', formData.summary);
-		data.append('content', formData.content);
+		data.append('title', title);
+		data.append('summary', summary);
+		data.append('content', content);
 		if (files) data.append('thumbnail', files);
 		setLoading(true);
 		try {
@@ -98,7 +99,7 @@ const CreatePost = () => {
 	}
 
 	return (
-		<div className='flex flex-col h-100 justify-center items-center w-full box-border px-2 my-5 lg:ml-32'>
+		<div className='flex flex-col h-100 justify-center items-center w-full box-border px-2 my-5'>
 			<h2 className='p-4 font-bold text-3xl'>Create Your Post Here!</h2>
 			<form onSubmit={handleSubmit} className='w-full max-w-[600px]'>
 				<label
@@ -111,7 +112,7 @@ const CreatePost = () => {
 					name='title'
 					id='title'
 					type='text'
-					value={formData.title}
+					value={title}
 					onChange={handleChange}
 					placeholder='Write post title here...'
 					required
@@ -126,7 +127,7 @@ const CreatePost = () => {
 					id='summary'
 					name='summary'
 					type='text'
-					value={formData.summary}
+					value={summary}
 					onChange={handleChange}
 					placeholder='Write post summary here...'
 					required
@@ -151,7 +152,7 @@ const CreatePost = () => {
                 </label>
 				<ReactQuill
 					id='content'
-					value={formData.content}
+					value={content}
 					name='content'
 					onChange={(content) => setFormData((prev) => ({ ...prev, content }))}
 					formats={formats}
