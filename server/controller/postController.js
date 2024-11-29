@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const Post = require('../model/PostModel');
-const { error } = require('console');
+
 
 const UploadFile = multer({ dest: 'uploads/' });
 

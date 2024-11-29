@@ -2,77 +2,84 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 const ProjectModal = ({ project, onClose }) => {
-	const { imageUrl, title, description, techStack, url, github } = project;
+	const { image, title, description, tags, url, github } = project;
+	const tagArray = tags ? tags.split(',').map((tag) => tag.trim()) : [];
 
 	const modalVariants = {
-		hidden: {
-			opacity: 0,
-			scale: 0.8,
-		},
-		visible: {
-			opacity: 1,
-			scale: 1,
-			transition: {
-				duration: 0.3,
-			},
-		},
+		hidden: { opacity: 0, scale: 0.95 },
+		visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
+	};
+
+	// Close modal if clicked outside the modal content
+	const handleOutsideClick = (e) => {
+		if (e.target === e.currentTarget) {
+			onClose();
+		}
 	};
 
 	return (
-		<div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4'>
+		<div
+			onClick={handleOutsideClick}
+			className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center p-4'>
+			{/* Modal Content */}
 			<motion.div
 				initial='hidden'
 				animate='visible'
+				exit='hidden'
 				variants={modalVariants}
-				className='bg-white p-4 rounded-lg shadow-lg max-w-lg w-full relative'>
+				className='bg-white rounded-2xl shadow-xl w-full sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl relative overflow-hidden'>
 				<button
 					onClick={onClose}
-					className='absolute top-2 right-3 text-gray-800 hover:text-gray-600 transition-colors duration-200'>
+					aria-label='Close'
+					className='absolute top-4 right-4 bg-transparent text-black hover:text-gray-500 p-2 rounded-full transition-colors'>
 					<XMarkIcon className='h-6 w-6' />
 				</button>
 				<div className='relative'>
 					<img
-						loading='lazy'
-						src={imageUrl}
+						src={`${serverUrl}/${image}`}
 						alt={title}
-						className='w-full h-48 object-cover mb-4 rounded'
+						className='w-full h-48 sm:h-56 md:h-64 object-cover rounded-t-2xl'
 					/>
-					<div className='absolute bottom-0 hover:h-full left-0 w-full p-2 bg-black bg-opacity-40 text-white'>
-						<h3 className='text-lg font-semibold'>{title}</h3>
-					</div>
 				</div>
-				<p className='mt-2'>{description}</p>
-				<div className='mt-4'>
-					<div className='flex flex-wrap gap-2 mt-1'>
-						{techStack.map((tech, index) => (
+				<div className='p-6 space-y-4'>
+					<h3 className='text-xl sm:text-2xl font-semibold text-gray-900'>
+						{title}
+					</h3>
+					<p className='text-gray-600 text-sm sm:text-base'>
+						{description}
+					</p>
+					<div className='flex flex-wrap gap-2 mt-3'>
+						{tagArray.map((tag, index) => (
 							<span
 								key={index}
-								className='bg-indigo-100 text-indigo-800 text-xs font-semibold px-2 py-1 rounded-full'>
-								{tech}
+								className='text-xs bg-gray-200 text-gray-700 py-1 px-2 rounded-full hover:bg-gray-300 transition'>
+								#{tag}
 							</span>
 						))}
 					</div>
-				</div>
-				<div className='mt-4 flex flex-row gap-2'>
-					{url && (
-						<a
-							href={url}
-							target='_blank'
-							rel='noopener noreferrer'
-							className='text-indigo-600 hover:underline text-sm'>
-							View Project
-						</a>
-					)}
-					{github && (
-						<a
-							href={github}
-							target='_blank'
-							rel='noopener noreferrer'
-							className='text-gray-800 hover:underline text-sm'>
-							GitHub Source
-						</a>
-					)}
+					<div className='flex gap-4 mt-6'>
+						{url && (
+							<a
+								href={url}
+								target='_blank'
+								rel='noopener noreferrer'
+								className='text-blue-600  px-5 py-2 text-xs sm:text-sm hover:underline'>
+								🌐 View Project
+							</a>
+						)}
+						{github && (
+							<a
+								href={github}
+								target='_blank'
+								rel='noopener noreferrer'
+								className='bg-gray-800 text-white px-5 py-2 rounded-lg text-xs sm:text-sm hover:bg-gray-900 transition-colors'>
+								📂 GitHub Source
+							</a>
+						)}
+					</div>
 				</div>
 			</motion.div>
 		</div>

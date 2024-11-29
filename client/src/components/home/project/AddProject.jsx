@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import axios from 'axios';
 
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 const AddProject = () => {
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const [url, setUrl] = useState('');
-	const [tags, setTags] = useState('');
+	const [formData, setFormData] = useState({
+		title: '',
+		description: '',
+		url: '',
+		tags: '',
+	});
 	const [image, setImage] = useState(null);
 	const [imagePreview, setImagePreview] = useState(null);
 	const [loading, setLoading] = useState(false);
-	const [message, setMessage] = useState('');
+
+	const { title, description, url, tags } = formData;
 
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];
@@ -22,88 +27,124 @@ const AddProject = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		const formData = new FormData();
-		formData.append('title', title);
-		formData.append('description', description);
-		formData.append('url', url);
-		formData.append('tags', tags);
-		if (image) formData.append('image', image);
+		const projectData = new FormData();
+		projectData.append('title', title);
+		projectData.append('description', description);
+		projectData.append('url', url);
+		projectData.append('tags', tags);
+		if (image) projectData.append('image', image);
 
 		try {
-			const response = await axios.post('/api/projects', formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data',
+			const response = await axios.post(
+				`${serverUrl}/dashboard/project`,
+				projectData,
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
 				},
-			});
-			setMessage('Project added successfully!');
+			);
+			alert('Project added successfully!');
 		} catch (err) {
-			setMessage('Failed to add project. Please try again.');
+			const errorMessage =
+            err.response?.data?.message || 'An unexpected error occurred';
+        alert(errorMessage);
 		} finally {
 			setLoading(false);
+			setFormData({
+				title: '',
+				description: '',
+				url: '',
+				tags: '',
+			})
+			setImage(null);
+			setImagePreview(null);
 		}
+	};
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prevData) => ({ ...prevData, [name]: value }));
 	};
 
 	return (
 		<div className='flex justify-center items-center h-screen'>
 			<div className='px-4 py-2 rounded w-full max-w-4xl'>
-				<h2 className='text-xl font-bold mb-4 text-center'>Add New Project</h2>
-				<form onSubmit={handleSubmit} className='space-y-3'>
+				<h2 className='text-xl font-bold mb-4 text-center'>
+					Add New Project
+				</h2>
+				<form
+					onSubmit={handleSubmit}
+					className='space-y-3'>
 					<div>
-						<label htmlFor='title' className='block mb-2 text-sm'>
+						<label
+							htmlFor='title'
+							className='block mb-2 text-sm'>
 							Project Title
 						</label>
 						<input
 							type='text'
 							id='title'
+							name='title'
 							className='w-full p-2 border border-gray-300 rounded'
 							value={title}
-							onChange={(e) => setTitle(e.target.value)}
+							onChange={handleChange}
 							required
 						/>
 					</div>
 					<div>
-						<label htmlFor='description' className='block mb-2 text-sm'>
+						<label
+							htmlFor='description'
+							className='block mb-2 text-sm'>
 							Project Description
 						</label>
 						<textarea
 							id='description'
+							name='description'
 							className='w-full p-2 border border-gray-300 rounded'
 							value={description}
-							onChange={(e) => setDescription(e.target.value)}
-							required
-						></textarea>
+							onChange={handleChange}
+							required></textarea>
 					</div>
 					<div className='lg:grid lg:grid-cols-2 lg:gap-4'>
 						<div>
-							<label htmlFor='url' className='block mb-2 text-sm'>
+							<label
+								htmlFor='url'
+								className='block mb-2 text-sm'>
 								Project URL
 							</label>
 							<input
 								type='url'
 								id='url'
+								name='url'
 								className='w-full p-2 border border-gray-300 rounded'
 								value={url}
-								onChange={(e) => setUrl(e.target.value)}
+								onChange={handleChange}
 								required
 							/>
 						</div>
 						<div>
-							<label htmlFor='tags' className='block mb-2 text-sm'>
+							<label
+								htmlFor='tags'
+								className='block mb-2 text-sm'>
 								Tags (Comma Separated)
 							</label>
 							<input
 								type='text'
 								id='tags'
+								name='tags'
 								className='w-full p-2 border border-gray-300 rounded'
 								value={tags}
-								onChange={(e) => setTags(e.target.value)}
+								onChange={handleChange}
 								placeholder="e.g. 'React, Node.js, MongoDB'"
 							/>
 						</div>
 					</div>
 					<div className='lg:grid lg:grid-cols-2 lg:gap-4'>
 						<div>
-							<label htmlFor='image' className='block mb-2 text-sm'>
+							<label
+								htmlFor='image'
+								className='block mb-2 text-sm'>
 								Project Image
 							</label>
 							<input
@@ -115,7 +156,9 @@ const AddProject = () => {
 						</div>
 						{imagePreview && (
 							<div className='mt-4 lg:mt-0'>
-								<p className='font-medium text-gray-700 text-sm'>Image Preview:</p>
+								<p className='font-medium text-gray-700 text-sm'>
+									Image Preview:
+								</p>
 								<img
 									src={imagePreview}
 									alt='Preview'
@@ -127,12 +170,10 @@ const AddProject = () => {
 					<button
 						type='submit'
 						className='px-4 py-2 bg-blue-600 text-white rounded disabled:cursor-not-allowed w-full text-sm'
-						disabled={loading}
-					>
+						disabled={loading}>
 						{loading ? 'Adding...' : 'Add Project'}
 					</button>
 				</form>
-				{message && <p className='mt-4 text-center'>{message}</p>}
 			</div>
 		</div>
 	);

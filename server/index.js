@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const projectRoutes = require('./routes/projectRoutes');
 const app = express();
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
@@ -53,6 +54,7 @@ app.use(express.urlencoded({extended: true}))
 app.use('/', authRoutes);
 app.use('/', postRoutes);
 app.use('/', contactRoutes);
+app.use('/', projectRoutes);
 
 // Connect to MongoDB and start the server
 mongoose

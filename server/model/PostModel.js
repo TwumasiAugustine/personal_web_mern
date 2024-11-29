@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const { Schema, model } = mongoose;
+const {  Schema, model } = mongoose;
 
-const commentSchema = new mongoose.Schema({
+const commentSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     text: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 });
-const likeSchema = new mongoose.Schema({
+const likeSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
