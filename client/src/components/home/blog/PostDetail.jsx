@@ -1,4 +1,3 @@
-import { BiArrowBack } from "react-icons/bi";
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
@@ -32,7 +31,7 @@ const PostDetail = () => {
 				setLoading(false);
 			})
 			.catch((err) => {
-				setError('Failed to load post');
+				setError('Failed to load post', err.message);
 				setLoading(false);
 			});
 	}, [id]);
@@ -118,8 +117,19 @@ const PostDetail = () => {
 				name='Twumasi Augustine'
 			/>
 			<div className='post-detail bg-white max-w-5xl mx-auto p-6'>
-				<Link to='/blog' className='flex items-center my-2 text-indigo-600 hover:underline'>
-                    <BiArrowBack /> Back
+				<Link to='/blog' className='flex items-center my-2 text-indigo-600'><svg
+						xmlns='http://www.w3.org/2000/svg'
+						fill='none'
+						viewBox='0 0 24 24'
+						strokeWidth={1.5}
+						stroke='currentColor'
+						className='w-5 h-5 mr-2'>
+						<path
+							strokeLinecap='round'
+							strokeLinejoin='round'
+							d='M15.75 19.5L8.25 12l7.5-7.5'
+						/>
+					</svg> Back to Blog
                 </Link>
 				<header className='border-b pb-4 mb-6'>
 					<h1 className='text-3xl font-bold text-black-800'>{post.title}</h1>
@@ -210,7 +220,7 @@ const PostDetail = () => {
 									className='text-lg font-semibold text-indigo-600 hover:underline'>
 									{relatedPost.title}
 								</Link>
-								<p className='text-sm text-gray-500'>{relatedPost.summary}</p>
+								<p className='text-sm text-gray-500 line-clamp-2'>{relatedPost.summary}</p>
 							</li>
 						))}
 					</ul>

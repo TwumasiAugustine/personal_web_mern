@@ -94,7 +94,7 @@ const getUserData = async (req, res) => {
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 		res.json({
-			id: info.id,
+			id: info._id,
 			username: info.username,
 			email: info.email,
 			roles: info.roles,

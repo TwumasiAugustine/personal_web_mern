@@ -104,8 +104,8 @@ const GetPostById = async (req, res) => {
 const UpdatePost = async (req, res) => {
 	const { id } = req.params;
 	const { title, content, summary } = req.body;
-	console.log('Updating post with data:', { title, content, summary });
-
+	const thumbnail = req.file;
+	
 	try {
 		const updatedPost = await Post.findByIdAndUpdate(
 			id,

@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import { UserContext } from '../../../context/UserContext';
+
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const formats = [
@@ -61,9 +60,8 @@ const modules = {
 };
 
 const UpdateBlog = ({ blogId, onCancel }) => {
-    const { id } = useParams();
-	const navigate = useNavigate();
-	const { setBlogPosts } = useContext(UserContext);
+    const navigate = useNavigate();
+    const { setBlogPosts } = useContext(UserContext); 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
@@ -82,7 +80,7 @@ const UpdateBlog = ({ blogId, onCancel }) => {
                     title: data.post.title,
                     summary: data.post.summary,
                     content: data.post.content,
-				});
+                });
             } catch (error) {
                 setError('Failed to load blog post. Please try again.');
             } finally {
@@ -101,50 +99,50 @@ const UpdateBlog = ({ blogId, onCancel }) => {
         }));
     };
 
-    // TODO unable to update
-const { title, summary, content } = formData;
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+    const { title, summary, content } = formData;
 
-    
-    if (!title || !summary || !content) {
-        setError('Please fill out all required fields.');
-        setLoading(false);
-        return;
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
 
-    const data = new FormData();
-    data.append('title', title.trim());
-    data.append('summary', summary.trim());
-    data.append('content', content.trim());
-
-    if (files) {
-        data.append('thumbnail', files);
-    }
-
-    try {
-        const response = await axios.put(`${serverUrl}/blog/post/${blogId}`, data, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-            withCredentials: true,
-        });
-        console.log(data)
-
-        if (response.status === 200) {
-            alert('Post updated successfully');
-            navigate('/blog');
-        } else {
-            throw new Error('Failed to update the post. Please try again.');
+        if (!title || !summary || !content) {
+            setError('Please fill out all required fields.');
+            setLoading(false);
+            return;
         }
-    } catch (error) {
-        console.error('Failed to update post:', error);
-        setError('Failed to update post. Please check your input and try again.');
-    } finally {
-        setLoading(false);
-    }
-};
 
+        const data = new FormData();
+        data.append('title', title.trim());
+        data.append('summary', summary.trim());
+        data.append('content', content.trim());
+
+        if (files) {
+            data.append('thumbnail', files);  
+        }
+
+        try {
+            const response = await axios.put(`${serverUrl}/blog/post/${blogId}`, data, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                withCredentials: true,
+            });
+
+            if (response.status === 200) {
+                alert('Post updated successfully');
+                navigate('/blog');
+                setBlogPosts((prev) => prev.map((post) =>
+                    post._id === blogId ? { ...post, ...formData } : post
+                ));
+            } else {
+                throw new Error('Failed to update the post. Please try again.');
+            }
+        } catch (error) {
+            console.error('Failed to update post:', error);
+            setError('Failed to update post. Please check your input and try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="flex flex-col items-center w-full px-4 my-5">
@@ -158,7 +156,7 @@ const handleSubmit = async (e) => {
                     type="text"
                     id="title"
                     name="title"
-                    value={title}
+                    value={formData.title}
                     onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                     placeholder="Enter post title"
@@ -171,7 +169,7 @@ const handleSubmit = async (e) => {
                     type="text"
                     id="summary"
                     name="summary"
-                    value={summary}
+                    value={formData.summary}
                     onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                     placeholder="Enter post summary"
@@ -197,8 +195,8 @@ const handleSubmit = async (e) => {
                 </label>
                 <ReactQuill
                     id="content"
-                    value={content}
-                    name='content'
+                    value={formData.content}
+                    name="content"
                     onChange={(value) => 
                         setFormData((prev) => ({ ...prev, content: value }))
                     }
@@ -213,11 +211,7 @@ const handleSubmit = async (e) => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`p-2 text-sm text-white rounded ${
-                            loading
-                                ? 'bg-gray-500 cursor-not-allowed'
-                                : 'bg-indigo-600 hover:bg-indigo-700'
-                        }`}
+                        className={`p-2 text-sm text-white rounded ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
                     >
                         {loading ? 'Updating...' : 'Update Post'}
                     </button>

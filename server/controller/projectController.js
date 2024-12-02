@@ -64,25 +64,73 @@ const page = parseInt(req.query.page) || 1;
 		res.status(500).json({ message: 'Failed to fetch project' });
 	}
 }
+// Get project by ID
 
-// Delete project by ID
-const DeleteProject = async(req, res) => {
-    const {id} = req.params;
-    try {
-		const project = await Project.findByIdAndDelete(id);
+const GetProjectById = async(req, res) => {
+	const {id} = req.params;
+	try {
+		const project = await Project.findById(id);
 		if (!project) {
 			return res.status(404).json({ message: 'Project not found' });
 		}
-		res.json({ message: 'Project deleted successfully' });
+		res.json(project);
 	} catch (err) {
-		console.error('Error deleting project:', err.message);
-		res.status(500).json({ message: 'Failed to delete project' });
+		console.error('Error fetching project:', err.message);
+		res.status(500).json({ message: 'Failed to fetch project' });
 	}
 }
 
+// Delete project by ID
+const DeleteProjectById = async (req, res) => {
+	const { id } = req.params;
+    try {
+        const project = await Project.findByIdAndDelete(id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.json({ message: 'Project deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting project:', err.message);
+        res.status(500).json({ message: 'Failed to delete project' });
+    }
+}
+
+// Update Project by Id
+const UpdateProject = async (req, res) => {
+	
+	const { id } = req.params;
+	const image = req.file;
+	const { title, description, url, tags } = req.body;
+
+	if (!title|| !description || !url || !tags) {
+		return res.status(400).json({ message: 'All fields are required' });
+	}
+	
+	try {
+		const project = await Project.findByIdAndUpdate(id, {
+			title,
+			description,
+			url,
+            tags,
+            image,
+		}, { new: true, runValidators: true });
+		
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+		}
+		res.json({ message: 'Project updated successfully', project });
+	} catch (err) {
+		console.error('Error updating project:', err.message);
+        res.status(500).json({ message: 'Failed to update project' });
+	}
+	
+}
+	
 module.exports = {
     AddProject,
     GetProjects,
-    DeleteProject,
-    UploadProject
+    DeleteProjectById,
+	UploadProject,
+	UpdateProject,
+	GetProjectById
 }

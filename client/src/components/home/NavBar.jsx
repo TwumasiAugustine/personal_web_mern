@@ -69,7 +69,7 @@ const NavBar = () => {
 
                     <div className='hidden lg:block'>
                         <div className='ml-4 flex items-center lg:ml-6'>
-                            {userInfo?.username ? (
+                            {userInfo.data?.username ? (
                                 <>
                                     <NavLink
                                         to='/dashboard'
@@ -166,7 +166,7 @@ const NavBar = () => {
 
                 <div className='border-t border-gray-700 pb-3 pt-4'>
                     <div className='space-y-1 px-2'>
-                        {userInfo?.username ? (
+                        {userInfo.data?.username ? (
                             <>
                                 <NavLink
                                     to='/dashboard'

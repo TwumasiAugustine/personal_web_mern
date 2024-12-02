@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -11,13 +12,39 @@ export const UserContextProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [selectedProject, setSelectedProject] = useState(null);
+	const [projects, setProjects] = useState({});
+	
 
-    // Load postsPerPage from localStorage or default to 4
+	const handleProjectClick = (project) => {
+		setSelectedProject(project);
+	};
+
+	const handleCloseModal = () => {
+		setSelectedProject(null);
+	};
+
+	const fetchProjectData = async () => {
+		try {
+			const {data}= await axios.get(`${serverUrl}/project`);
+			setProjects(data.project || []);
+		} catch (error) {
+			setError(error.message);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchProjectData();
+	}, []);
+
+
+    
     const [postsPerPage, setPostsPerPage] = useState(
         () => Number(localStorage.getItem('postsPerPage')) || 4
     );
 
-    // Save postsPerPage to localStorage whenever it changes
     useEffect(() => {
         localStorage.setItem('postsPerPage', postsPerPage);
     }, [postsPerPage]);
@@ -48,7 +75,7 @@ export const UserContextProvider = ({ children }) => {
 
     useEffect(() => {
         fetchBlogPosts(currentPage);
-    }, [currentPage, postsPerPage]); // Include postsPerPage to fetch new data when it changes
+    }, [currentPage, postsPerPage]); 
 
     const handlePrevPage = () => {
         if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
@@ -79,6 +106,7 @@ export const UserContextProvider = ({ children }) => {
                 setCurrentPage,
                 currentPage,
                 fetchBlogPosts,
+                fetchProjectData,
                 handlePrevPage,
                 handleNextPage,
                 totalPages,
@@ -88,6 +116,11 @@ export const UserContextProvider = ({ children }) => {
                 setLoading,
                 setError,
                 handleLogout,
+                selectedProject,
+                setSelectedProject,
+                projects,
+                handleProjectClick,
+                handleCloseModal,
             }}
         >
             {children}

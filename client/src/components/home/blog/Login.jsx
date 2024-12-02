@@ -15,7 +15,7 @@ const Login = () => {
 
 	const [loading, setLoading] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
-	const {setUserInfo, userInfo} = useContext(UserContext);
+	const {setUserInfo} = useContext(UserContext);
 	const navigate = useNavigate();
 
 	const handleChange = (e) => {
@@ -38,10 +38,12 @@ const Login = () => {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true,
             }
-        );
+		);
+		
+		const {data} = response
 
         if (response.status === 200) {
-            setUserInfo({ username: response.data.username });
+            setUserInfo({data});
             navigate('/blog');
         }
     } catch (err) {
@@ -52,7 +54,8 @@ const Login = () => {
         setLoading(false);
         setFormData({
             username: '',
-            password: '',
+			password: '',
+			
         });
     }
 };

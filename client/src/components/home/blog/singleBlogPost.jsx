@@ -6,11 +6,27 @@ import { formatDistanceToNow } from 'date-fns';
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const SingleBlogPost = ({ post }) => {
-	const { path, title, createdAt, comments, summary, _id, likes, author } = post;
+	const {
+		path,
+		title,
+		createdAt,
+		comments,
+		summary,
+		_id,
+		likes,
+		author,
+		updatedAt,
+	} = post;
 
 	const postDate = new Date(createdAt);
 	const formattedDate = postDate.toLocaleDateString();
-	const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
+	const timeAgo = formatDistanceToNow(new Date(post.createdAt), {
+		addSuffix: true,
+	});
+	const updatedDate = new Date(updatedAt);
+	const updatedTimeAgo = formatDistanceToNow(new Date(post.updatedAt), {
+		addSuffix: true,
+	});
 	return (
 		<div className='mb-8'>
 			<div className='flex justify-center lg:items-center gap-5'>
@@ -30,19 +46,20 @@ const SingleBlogPost = ({ post }) => {
 							{title}
 						</Link>
 					</h3>
-					<div className='flex justify-start gap-4 text-[12px] text-gray-500 mb-3'>
+					<div className='flex flex-wrap items-center gap-4 text-[12px] text-gray-500 mb-3'>
 						<div className='flex items-center gap-2'>
 							<span className='text-gray-400'>Published by</span>
-							<span className='font-semibold'>
-								{author} Twumasi
-							</span>
+							<span className='font-semibold'>{author}</span>
 						</div>
 						<span className='text-gray-400'>|</span>
 						<span className='date'>{formattedDate}</span>
+						<span className='text-gray-400'>|</span>
 						<span className='time'>{timeAgo}</span>
-						
+						<span className='text-gray-400'>Last Update</span>
+						<span className='updated'>{updatedTimeAgo}</span>
 					</div>
-					<div className='intro text-[15px] text-gray-800 mb-3'>
+
+					<div className='intro text-[15px] text-gray-800 mb-3 line-clamp-3'>
 						{summary}
 					</div>
 					<Link

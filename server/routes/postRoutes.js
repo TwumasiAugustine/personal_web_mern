@@ -16,8 +16,8 @@ const authenticate = require('../middleware/authMiddleware');
 // Post blog route
 router.post(
 	'/blog/create',
-	authenticate,
-	UploadFile.single('thumbnail'),
+	authenticate(['user', 'admin']),
+    UploadFile.single('thumbnail'),
 	PostBlog,
 );
 // Get blog route
@@ -31,10 +31,10 @@ router.put('/blog/post/:id',  UpdatePost);
 
 router.delete('/blog/post/:id',  DeletePost);
 // Add comment route
-router.post('/blog/post/:id/comment', authenticate, AddComment);
+router.post('/blog/post/:id/comment', authenticate('user', 'admin'), AddComment);
 
 // Like post route
-router.post('/blog/post/:id/like', authenticate, LikePost);
+router.post('/blog/post/:id/like', authenticate(['user', 'admin']), LikePost);
 
 // Get comments route
 router.get('/blog/post/:id/comments', GetComments);

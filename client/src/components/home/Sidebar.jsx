@@ -1,11 +1,11 @@
-import { BiLogOut } from "react-icons/bi"; 
 /* eslint-disable react/prop-types */
 import { useContext } from 'react';
 import { FaHome, FaBlog, FaProjectDiagram } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-	const { userInfo, handleLogout } = useContext(UserContext);
+	const { userInfo } = useContext(UserContext);
+	
 	return (
 		<>
 			<div
@@ -35,7 +35,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 						<FaBlog className='mr-3' /> Blogs
 					</NavLink>
 					<NavLink
-						to='/projects'
+						to='/project'
 						className={({ isActive }) =>
 							`flex items-center px-4 py-2 text-sm ${
 								isActive ? 'bg-gray-700' : 'hover:bg-gray-700'
@@ -45,12 +45,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 					</NavLink>
 				</nav>
 				<div className='flex flex-col justify-end a m-4'>
-					<p className='text-sm mb-4'>Welcome, {userInfo?.username}</p>
-					<button
-                        onClick={handleLogout}
-						className='flex justify-between items-center px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded hover:bg-indigo-500 cursor-pointer'>
-						<BiLogOut className='mr-3'/> Logout
-                    </button>
+					<p className='text-sm mb-4'>Welcome, {userInfo.data?.username}</p>
                 </div>
 			</div>
 			{/* Mobile Overlay */}

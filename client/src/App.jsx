@@ -4,7 +4,9 @@ import { AnimatePresence } from 'framer-motion';
 import { UserContextProvider } from './context/UserContext';
 import Home from './pages/Home';
 import Project from './pages/Project';
+import ProjectDetail from './components/home/project/ProjectDetail';
 import Blog from './pages/Blog';
+import PrivateRoute from './pages/PrivateRoute';
 import NoPage from './pages/NoPage';
 import PostDetail from './components/home/blog/PostDetail';
 import Login from './components/home/blog/Login';
@@ -24,11 +26,16 @@ const App = () => {
             <Routes>
               <Route path="/" index element={<Home />} />
               <Route path="project" element={<Project />} />
+              <Route path='project/:id' element={<ProjectDetail/>} />
               <Route path="blog" element={<Blog />} />
               <Route path="blog/:id" element={<PostDetail />} />
               <Route path="blog/login" element={<Login />} />
               <Route path="blog/signup" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={
+                <PrivateRoute
+                  element={Dashboard}
+                  roles = {['admin']}
+              />} />
               <Route path="*" element={<NoPage />} />
             </Routes>
           </AnimatePresence>

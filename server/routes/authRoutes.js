@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {SignUp, LogIn, getUserData, LogOut}= require('../controller/authController');
+const { SignUp, LogIn, getUserData, LogOut } = require('../controller/authController');
+const authenticate = require('../middleware/authMiddleware');
 // SignUp route
 router.post('/blog/signup', SignUp)
 
@@ -8,7 +9,7 @@ router.post('/blog/signup', SignUp)
 router.post('/blog/login', LogIn)
 
 // Get user data 
-router.get('/profile', getUserData)
+router.get('/profile', authenticate(['user', 'admin']), getUserData)
 
 // Logout user
 

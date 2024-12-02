@@ -1,44 +1,19 @@
-import { useState, lazy, Suspense, useEffect } from 'react';
-import axios from 'axios';
+import {  lazy, Suspense, useContext } from 'react';
 import Footer from '../components/home/Footer';
 import FilterBar from '../components/home/project/FilterBar';
-import ProjectModal from '../components/home/project/ProjectModal';
 import SEO from './SEO.jsx';
 import { motion } from 'framer-motion';
-
+import { UserContext } from '../context/UserContext.jsx';
 const ProjectCard = lazy(() =>
 	import('../components/home/project/ProjectCard'),
 );
-const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const Project = () => {
-	const [selectedProject, setSelectedProject] = useState(null);
-	const [projects, setProjects] = useState({});
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-
-	const handleProjectClick = (project) => {
-		setSelectedProject(project);
-	};
-
-	const handleCloseModal = () => {
-		setSelectedProject(null);
-	};
-
-	const fetchProjectData = async () => {
-		try {
-			const {data}= await axios.get(`${serverUrl}/dashboard/project`);
-			setProjects(data.project || []);
-		} catch (error) {
-			setError(error.message);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		fetchProjectData();
-	}, []);
+	const {
+		loading,
+		projects,
+		handleProjectClick,
+	} = useContext(UserContext);
 
 	const pageVariants = {
 		initial: {
@@ -88,11 +63,22 @@ const Project = () => {
 							Loading projects...
 						</div>
 					) : projects.length === 0 ? (
-						<div className='flex justify-center items-center h-96 text-gray-700'>
-							<h2 className='text-2xl font-semibold'>
-								Coming Soon
-							</h2>
-						</div>
+						<div className="flex justify-center items-center h-96 text-gray-700">
+	<motion.h2
+		className="text-5xl font-semibold"
+		initial={{ opacity: 0, scale: 0.8 }}
+		animate={{ opacity: 1, scale: 1 }}
+		transition={{
+			duration: 0.8,
+			ease: 'easeInOut',
+			repeat: Infinity,
+			repeatType: 'reverse',
+		}}
+	>
+		Coming Soon
+	</motion.h2>
+</div>
+
 					) : (
 						<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 place-items-center gap-6 my-8'>
 							{projects.map((project) => (
@@ -105,12 +91,6 @@ const Project = () => {
 						</div>
 					)}
 				</Suspense>
-				{selectedProject && (
-					<ProjectModal
-						project={selectedProject}
-						onClose={handleCloseModal}
-					/>
-				)}
 			</motion.div>
 
 			<Footer />

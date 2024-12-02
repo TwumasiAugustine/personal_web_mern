@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -36,7 +37,7 @@ const AddProject = () => {
 
 		try {
 			const response = await axios.post(
-				`${serverUrl}/dashboard/project`,
+				`${serverUrl}/project`,
 				projectData,
 				{
 					headers: {
@@ -75,7 +76,7 @@ const AddProject = () => {
 				</h2>
 				<form
 					onSubmit={handleSubmit}
-					className='space-y-3'>
+					className='space-y-3 overflow-auto h-[80vh]'>
 					<div>
 						<label
 							htmlFor='title'
