@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
@@ -15,6 +16,7 @@ const PostDetail = () => {
 	const [error, setError] = useState(null);
 	const [likes, setLikes] = useState(0);
 	const [comments, setComments] = useState([]);
+	const [name, setName] = useState('');
 	const [newComment, setNewComment] = useState('');
 	const navigate = useNavigate();
 
@@ -30,36 +32,43 @@ const PostDetail = () => {
 				setComments(post.comments);
 				setLoading(false);
 			})
-			.catch((err) => {
-				setError('Failed to load post', err.message);
-				setLoading(false);
+			.catch((error) => {
+				alert(
+					error.response?.data?.message ||
+						'An unexpected error occurred',
+				);
 			});
 	}, [id]);
 
 	// Handle like button click
 	const handleLike = async () => {
 		try {
-            await axios.post(`${serverUrl}/blog/post/${id}/like`, null, {
-                withCredentials: true,
-            });
-            setLikes(likes + 1);
-        } catch (error) {
-            alert(error.response?.data?.message || 'An unexpected error occurred');
-        }
+			await axios.post(`${serverUrl}/blog/post/${id}/like`, null, {
+				withCredentials: true,
+			});
+			setLikes(likes + 1);
+		} catch (error) {
+			alert(
+				error.response?.data?.message || 'An unexpected error occurred',
+			);
+			if (error) {
+				navigate('/blog/login');
+			}
+		}
 	};
 
 	// Handle comment submission
 	const handleCommentSubmit = async (e) => {
 		e.preventDefault();
-		if (!newComment.trim()) {
-			alert('Comment cannot be empty');
+		if (!newComment.trim() || !name.trim()) {
+			alert('Name and comment cannot be empty');
 			return;
 		}
 		try {
 			const response = await axios.post(
 				`${serverUrl}/blog/post/${id}/comment`,
-				{ text: newComment },
-				{ withCredentials: true }
+				{ name, text: newComment },
+				{ withCredentials: true },
 			);
 			setComments((prevComments) => [
 				...prevComments,
@@ -67,7 +76,10 @@ const PostDetail = () => {
 			]);
 			setNewComment('');
 		} catch (error) {
-			alert('Failed to add comment. Please try again later.');
+			alert(
+				error.response?.data?.message || 'An unexpected error occurred',
+			);
+			
 		}
 	};
 
@@ -105,19 +117,32 @@ const PostDetail = () => {
 	};
 
 	// Loading and error handling
-	if (loading) return <div className='flex justify-center items-center w-full h-screen'>Loading...</div>;
-	if (error) return <div className='flex justify-center items-center w-full h-screen text-red-800'>{error}</div>;
+	if (loading)
+		return (
+			<div className='flex justify-center items-center w-full h-screen'>
+				Loading...
+			</div>
+		);
+	if (error)
+		return (
+			<div className='flex justify-center items-center w-full h-screen text-red-800'>
+				{error}
+			</div>
+		);
 
 	return (
 		<div>
 			<SEO
-				title={post.title}
+				title={`Post Detail: ${post.title}`}
 				description={post.summary || 'Blog Post Details'}
 				type='Article'
 				name='Twumasi Augustine'
 			/>
 			<div className='post-detail bg-white max-w-5xl mx-auto p-6'>
-				<Link to='/blog' className='flex items-center my-2 text-indigo-600'><svg
+				<Link
+					to='/blog'
+					className='flex items-center my-2 text-indigo-600'>
+					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						fill='none'
 						viewBox='0 0 24 24'
@@ -129,15 +154,26 @@ const PostDetail = () => {
 							strokeLinejoin='round'
 							d='M15.75 19.5L8.25 12l7.5-7.5'
 						/>
-					</svg> Back to Blog
-                </Link>
+					</svg>{' '}
+					Back to Blog
+				</Link>
 				<header className='border-b pb-4 mb-6'>
-					<h1 className='text-3xl font-bold text-black-800'>{post.title}</h1>
+					<h1 className='text-3xl font-bold text-black-800'>
+						{post.title}
+					</h1>
 					<div className='flex items-center gap-4 text-sm text-gray-500 mt-2'>
-						<span>{new Date(post.createdAt).toLocaleDateString()}</span>
-						<span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</span>
+						<span>
+							{new Date(post.createdAt).toLocaleDateString()}
+						</span>
+						<span>
+							{formatDistanceToNow(new Date(post.createdAt), {
+								addSuffix: true,
+							})}
+						</span>
 						<span>{comments.length} comments</span>
-						<span>{`${likes} ${likes > 1 ? 'likes' : 'like'}`}</span>
+						<span>{`${likes} ${
+							likes > 1 ? 'likes' : 'like'
+						}`}</span>
 					</div>
 				</header>
 				<section className='mb-10'>
@@ -148,8 +184,9 @@ const PostDetail = () => {
 				</section>
 				<div className='mb-8 flex items-center gap-6'>
 					<button
+				        disabled
 						onClick={handleLike}
-						className='px-4 py-2 bg-indigo-800 text-white text-sm font-semibold rounded hover:bg-indigo-600'>
+						className='inline-flex justify-between px-4 py-2 bg-indigo-500 text-white text-sm font-semibold rounded hover:bg-indigo-600'>
 						👍 {likes}
 					</button>
 					<div className='flex gap-4'>
@@ -175,52 +212,85 @@ const PostDetail = () => {
 						</button>
 					</div>
 				</div>
-				<section id='comments' className='mb-10'>
+				<section
+					id='comments'
+					className='mb-10'>
 					<h2 className='text-2xl font-semibold mb-4'>Comments</h2>
 					{comments.length > 0 ? (
 						<ul className='space-y-4'>
 							{comments.map((comment) => (
-								<li key={comment._id} className='p-4 bg-gray-100 rounded shadow-sm'>
-									<p className='font-semibold text-gray-800'>{comment.username}</p>
-									<p className='text-gray-800'>{comment.text}</p>
+								<li
+									key={comment._id}
+									className='p-4 bg-gray-100 rounded shadow-sm'>
+									<p className=' text-gray-800'>
+										<span className='font-semibold'>{comment.name}:{' '}</span>
+										<span className='text-gray-800'>
+											{comment.text}
+										</span>
+									</p>
 									<small className='text-gray-500'>
-										{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+										{formatDistanceToNow(
+											new Date(comment.createdAt),
+											{ addSuffix: true },
+										)}
 									</small>
 								</li>
 							))}
 						</ul>
 					) : (
-						<p className='text-gray-500'>No comments yet. Be the first to comment!</p>
+						<p className='text-gray-500'>
+							No comments yet. Be the first to comment!
+						</p>
 					)}
-					<form onSubmit={handleCommentSubmit} className='mt-6'>
+					<form
+						onSubmit={handleCommentSubmit}
+						className='mt-6'>
+						<input
+						    required
+							type='text'
+							id='name'
+							name='name'
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							className='w-full mb-4 border border-gray-300 rounded p-3 focus:outline-none focus:ring-1 focus:ring-indigo-600'
+							placeholder='Enter your name'
+						/>
 						<textarea
+							required
 							id='comment'
 							name='comment'
 							value={newComment}
 							onChange={(e) => setNewComment(e.target.value)}
-							className='w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-500'
+							className='w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-1 focus:ring-indigo-600'
 							placeholder='Add a comment...'
 							rows={4}
 						/>
 						<button
 							type='submit'
-							className='mt-3 px-6 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700'>
+							className='mt-3 px-6 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-indigo-600'>
 							Submit
 						</button>
 					</form>
 				</section>
 				<section>
-					<h2 className='text-2xl font-semibold mb-4'>Related Posts</h2>
+					<h2 className='text-2xl font-semibold mb-4'>
+						Related Posts
+					</h2>
 					<ul className='space-y-4'>
 						{additionalPosts.map((relatedPost) => (
 							<li key={relatedPost._id}>
-								<Link
-									to={`/blog/${relatedPost._id}`}
-									onClick={(e) => handleRelatedPostClick(e, relatedPost._id)}
-									className='text-lg font-semibold text-indigo-600 hover:underline'>
+								<a
+									href={`/blog/${relatedPost._id}`}
+									onClick={(e) =>
+										handleRelatedPostClick(
+											e,
+											relatedPost._id,
+										)
+									}
+									className='text-indigo-600 '>
 									{relatedPost.title}
-								</Link>
-								<p className='text-sm text-gray-500 line-clamp-2'>{relatedPost.summary}</p>
+								<p className='text-black line-clamp-3'>{relatedPost.summary}</p>
+								</a>
 							</li>
 						))}
 					</ul>

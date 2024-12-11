@@ -4,6 +4,7 @@ const {
 	PostBlog,
 	UpdatePost,
 	DeletePost,
+	SearchPosts,
 	UploadFile,
 	GetBlogPosts,
 	GetPostById,
@@ -20,27 +21,15 @@ router.post(
     UploadFile.single('thumbnail'),
 	PostBlog,
 );
-// Get blog route
+
 router.get('/blog/posts', GetBlogPosts);
-
-// Get blog by id route
 router.get('/blog/post/:id', GetPostById);
-// update post by id
 router.put('/blog/post/:id',  UpdatePost);
-// Delete post by id
-
-router.delete('/blog/post/:id',  DeletePost);
-// Add comment route
-router.post('/blog/post/:id/comment', authenticate('user', 'admin'), AddComment);
-
-// Like post route
-router.post('/blog/post/:id/like', authenticate(['user', 'admin']), LikePost);
-
-// Get comments route
+router.delete('/blog/post/:id', DeletePost);
+router.get('/blog/search', SearchPosts);
+router.post('/blog/post/:id/comment',  AddComment);
+router.post('/blog/post/:id/like',  LikePost);
 router.get('/blog/post/:id/comments', GetComments);
-
-// Get like count route
-
 router.get('/blog/post/:id/like-count', GetLikeCount);
 
 module.exports = router;

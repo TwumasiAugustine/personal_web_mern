@@ -1,12 +1,12 @@
 import '/src/styles/home.css';
 import myImg from '/src/assets/myphotoencoded.jpeg';
-import { useState, useMemo,  useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const HeroSection = () => {
-	const texts = useMemo(() => ['Web Developer', 'Frontend Developer', 'Freelancer'], []);
-	const typingSpeed = 500;
-	const pauseBetweenTexts = 100;
+	const texts = useMemo(() => ['Frontend Dev', 'Backend Dev', 'Full-stack Dev'], []);
+	const typingSpeed = 150; 
+	const pauseBetweenTexts = 2000; 
 	const [textIndex, setTextIndex] = useState(0);
 	const [charIndex, setCharIndex] = useState(0);
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -19,7 +19,9 @@ const HeroSection = () => {
 				setCharIndex((prevIndex) => {
 					if (prevIndex <= 0) {
 						setIsDeleting(false);
-						setTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
+						setTextIndex(
+							(prevIndex) => (prevIndex + 1) % texts.length,
+						);
 						return 0;
 					}
 					return prevIndex - 1;
@@ -36,26 +38,30 @@ const HeroSection = () => {
 		};
 
 		const typingInterval = setInterval(type, typingSpeed);
-
 		return () => clearInterval(typingInterval);
 	}, [textIndex, isDeleting, texts]);
 
 	useEffect(() => {
-			const pauseTimeout = setTimeout(() => {
+		const pauseTimeout = setTimeout(
+			() => {
 				if (isDeleting) {
 					setCharIndex((prevIndex) => Math.max(0, prevIndex - 1));
 				} else {
 					setCharIndex((prevIndex) =>
-						Math.min(texts[textIndex].length, prevIndex + 1)
+						Math.min(texts[textIndex].length, prevIndex + 1),
 					);
 				}
-			}, isDeleting ? pauseBetweenTexts : 0);
-	
-			return () => clearTimeout(pauseTimeout); 
-		}, [charIndex, isDeleting, textIndex, texts]);
+			},
+			isDeleting ? pauseBetweenTexts : 0,
+		);
+
+		return () => clearTimeout(pauseTimeout);
+	}, [charIndex, isDeleting, textIndex, texts]);
 
 	return (
-		<section id='home' className='bg-white relative isolate border-none'>
+		<section
+			id='home'
+			className='bg-white relative isolate border-none'>
 			<div
 				aria-hidden='true'
 				className='absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-60'>
@@ -67,9 +73,9 @@ const HeroSection = () => {
 					className='relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]'
 				/>
 			</div>
-			<div className='relative h-screen top-10'>
+			<div className='relative lg:h-[90vh] sm:h-100 md:h-100 top-10'>
 				<svg
-					className='wave absolute bottom-0 left-0 w-100 h-100'
+					className='wave absolute -bottom-40 lg:bottom-0 left-0 w-full h-[20rem]'
 					xmlns='http://www.w3.org/2000/svg'
 					viewBox='0 0 1440 320'>
 					<path
@@ -78,26 +84,26 @@ const HeroSection = () => {
 				</svg>
 				<div
 					id='home-container'
-					className='w-100 flex lg:flex-nowrap flex-wrap lg:justify-between items-center h-full justify-center sm:p-5 text-black lg:gap-20 lg:p-20 p-10 mb-20'>
+					className='w-full flex lg:flex-nowrap flex-wrap lg:justify-between items-center h-full justify-center sm:p-5 text-black lg:gap-20 lg:p-20 p-10 mb-20'>
 					<motion.div
 						initial={{ opacity: 0, scale: 0.8 }}
 						animate={{ opacity: 1, scale: 1 }}
 						transition={{ duration: 1 }}
-						className='flex justify-center items-center w-100 lg:w-1/2'>
+						className='flex justify-center items-center w-full lg:w-1/2'>
 						<img
 							onContextMenu={(e) => e.preventDefault()}
-							className='rounded-full lg:w-[250px] lg:h-[250px] w-[150px] h-[150px] border-[#4f46e5] border-[5px]'
+							className='rounded-full lg:w-[250px] lg:h-[250px] w-[150px] h-[150px] border-gray-800 border-[2px] md:border-[3px] lg:border-[5px]'
 							src={myImg}
 							loading='lazy'
-							alt='profile photo'
+							alt='Profile of Twumasi Augustine'
 						/>
 					</motion.div>
 					<motion.div
 						initial={{ opacity: 0, x: -50 }}
 						animate={{ opacity: 1, x: 0 }}
 						transition={{ duration: 1, delay: 0.5 }}
-						className='text-center w-100 lg:w-1/2'>
-						<div className='min-w-max p-2 '>
+						className='text-center w-full lg:w-1/2'>
+						<div className='min-w-max p-2'>
 							<span className='whitespace-nowrap typing text-indigo-600 text-3xl lg:text-4xl font-bold p-2 font-mono'>
 								{texts[textIndex].slice(0, charIndex)}
 							</span>
@@ -106,9 +112,10 @@ const HeroSection = () => {
 							Twumasi Augustine
 						</h1>
 						<p className='text-md lg:text-lg p-3 text-slate-600'>
-							I&apos;m a web developer based in Ghana. I&apos;m
-							passionate about building websites and applications
-							that are fast, responsive and user-friendly.
+							I&apos;m a web developer based in Kumasi, Ghana.
+							I&apos;m passionate about building websites and
+							applications that are fast, responsive, and
+							user-friendly.
 						</p>
 						<motion.div
 							initial={{ opacity: 0, y: 50 }}
@@ -132,7 +139,7 @@ const HeroSection = () => {
 						clipPath:
 							'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
 					}}
-					className='relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]'
+					className='relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#464042] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]'
 				/>
 			</div>
 		</section>

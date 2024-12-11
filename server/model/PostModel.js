@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {  Schema, model } = mongoose;
 
 const commentSchema = new Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    name: { type: String, required: true },
     text: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 });

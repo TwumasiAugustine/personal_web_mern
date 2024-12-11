@@ -1,7 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import SEO from '/src/pages/SEO';
 import Footer from '../Footer';
 import {UserContext} from '../../../context/UserContext'
@@ -70,7 +71,7 @@ const Login = () => {
 				name='Twumasi Augustine'
 			/>
 			<h2 className='mb-5 p-2 font-bold text-xl'>Login</h2>
-			<form onSubmit={handleLogin} className='text-black w-full max-w-[400px]'>
+			<form onSubmit={handleLogin} className='text-black w-full max-w-[400px] border p-8 rounded-sm shadow-sm'>
 				<input
 					id='username'
 					name='username'
@@ -105,7 +106,15 @@ const Login = () => {
 					type='submit'
 				>
 					{loading ? 'Logging in...' : 'Login'}
-				</button>
+					</button>
+					<div>
+						<div className="forgot-password mt-2">
+							<Link className='text-indigo-600 hover:underline ' to='/blog/forgot-password'>Forgot Password?</Link>
+						</div>
+						<p className='text-sm pt-4 text-right'>Don't have an account?
+							<Link className='ml-2 text-indigo-600 hover:underline' to='/blog/signup'>Sign Up</Link> 
+							</p>
+                    </div>
 			</form>
 			</div>
 			<Footer/>

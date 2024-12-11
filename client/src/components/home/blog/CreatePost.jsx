@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
@@ -33,7 +33,18 @@ const formats = [
 const modules = {
 	toolbar: [
 		[{ header: [1, 2, 3, 4, 5, 6, false] }],
-		['bold', 'underline', 'italic', 'link', 'image', 'video', 'blockquote', 'strike', 'code-block', 'formula'],
+		[
+			'bold',
+			'underline',
+			'italic',
+			'link',
+			'image',
+			'video',
+			'blockquote',
+			'strike',
+			'code-block',
+			'formula',
+		],
 		[{ list: 'ordered' }, { list: 'bullet' }],
 		[{ script: 'sub' }, { script: 'super' }],
 		[{ indent: '-1' }, { indent: '+1' }],
@@ -55,7 +66,17 @@ const CreatePost = () => {
 		content: '',
 	});
 	const [files, setFiles] = useState(null);
+	const quillRef = useRef(null);
+	useEffect(() => {
+		const quill = quillRef.current.getEditor(); 
+		if (quill) {
+			// Get the length of the content
+			const length = quill.getLength();
 
+			// Select all the text
+			quill.setSelection(0, length); 
+		}
+	}, []);
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prevData) => ({
@@ -64,7 +85,7 @@ const CreatePost = () => {
 		}));
 	};
 
-	const {title, summary, content } = formData;
+	const { title, summary, content } = formData;
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const data = new FormData();
@@ -80,7 +101,7 @@ const CreatePost = () => {
 				{
 					headers: { 'Content-Type': 'multipart/form-data' },
 					withCredentials: true,
-				}
+				},
 			);
 
 			if (response.status === 201) {
@@ -101,12 +122,14 @@ const CreatePost = () => {
 	return (
 		<div className='flex flex-col h-100 justify-center items-center w-full box-border px-2 my-5'>
 			<h2 className='p-4 font-bold text-3xl'>Create Your Post Here!</h2>
-			<form onSubmit={handleSubmit} className='w-full max-w-[600px]'>
+			<form
+				onSubmit={handleSubmit}
+				className='w-full max-w-[600px]'>
 				<label
-                    htmlFor='title'
-                    className='block text-sm font-medium'>
-                    Title
-                </label>
+					htmlFor='title'
+					className='block text-sm font-medium'>
+					Title
+				</label>
 				<input
 					className='w-full block p-2 border-[1px] border-[#ccc] mb-2 rounded'
 					name='title'
@@ -121,7 +144,7 @@ const CreatePost = () => {
 					htmlFor='summary'
 					className='block text-sm font-medium'>
 					Summary
-					</label>
+				</label>
 				<input
 					className='w-full block p-2 border-[1px] border-[#ccc] mb-2 rounded'
 					id='summary'
@@ -146,15 +169,18 @@ const CreatePost = () => {
 					onChange={(e) => setFiles(e.target.files[0])}
 				/>
 				<label
-                    htmlFor='content'
-                    className='block text-sm font-medium'>
-                    Content
-                </label>
+					htmlFor='content'
+					className='block text-sm font-medium'>
+					Content
+				</label>
 				<ReactQuill
+					ref={quillRef}
 					id='content'
 					value={content}
 					name='content'
-					onChange={(content) => setFormData((prev) => ({ ...prev, content }))}
+					onChange={(content) =>
+						setFormData((prev) => ({ ...prev, content }))
+					}
 					formats={formats}
 					theme='snow'
 					placeholder='Write your post here...'

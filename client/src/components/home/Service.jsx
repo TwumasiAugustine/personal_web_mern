@@ -15,7 +15,7 @@ const Service = () => {
 						Comprehensive Solutions for Your Needs
 					</p>
 					<p className='mt-6 text-lg leading-8 text-gray-600'>
-						From web development to mobile applications, we offer a
+						We offer a
 						wide range of services to help your business thrive.
 					</p>
 				</div>

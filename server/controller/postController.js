@@ -144,13 +144,32 @@ const DeletePost = async (req, res) => {
 	}
 };
 
+// Search Post
+
+const SearchPosts = async (req, res) => {
+	
+	try {
+		const { query } = req.query
+		const posts = await Post.find({
+			$or: [
+				{ title: { $regex: query, $options: 'i' } },
+				{ content: { $regex: query, $options: 'i' } },
+				{ summary: { $regex: query, $options: 'i' } },
+			]
+		})
+		res.status(200).json( posts );
+	} catch (err) {
+		console.error('Error searching posts:', err.message);
+        res.status(500).json({ message: 'Failed to search posts' });
+	}
+}
 // FIX Add a comment
 const AddComment = async (req, res) => {
 	const { id } = req.params;
-	const { text } = req.body;
+	const { text, name } = req.body;
 
-	if (!text || text.trim() === '') {
-		return res.status(400).json({ error: 'Comment text is required' });
+	if (!name || !text) {
+		return res.status(400).json({ message: 'Name and text are required' });
 	}
 
 	try {
@@ -159,14 +178,9 @@ const AddComment = async (req, res) => {
 			return res.status(404).json({ error: 'Post not found' });
 		}
 
-		console.log(req.user.id);
-
-		if (!req.user || !req.user.id) {
-			return res.status(401).json({ error: 'User not authenticated' });
-		}
-
+		
 		const comment = {
-			user: req.user.id,
+			name,
 			text,
 			createdAt: new Date(),
 		};
@@ -250,6 +264,7 @@ module.exports = {
 	PostBlog,
 	UpdatePost,
 	DeletePost,
+	SearchPosts,
 	UploadFile,
 	GetBlogPosts,
 	GetPostById,

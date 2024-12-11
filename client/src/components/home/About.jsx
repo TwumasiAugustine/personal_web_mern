@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
@@ -42,27 +43,26 @@ const About = () => {
 				<motion.p
 					className='text-md lg:text-justify lg:px-20 mb-4 sm:mb-6 md:mb-8 lg:mb-8'
 					variants={itemVariants}>
-					I’m a software entrepreneur with over 8 years of experience
-					building startups and software consulting for startups and
-					businesses. nm
+					I am a passionate full-stack web developer with over three
+					(3) years of experience building dynamic, responsive, and
+					accessible web applications that empower individuals and
+					businesses.
 				</motion.p>
 				<motion.p
 					className='text-md lg:text-justify lg:px-20 mb-4 sm:mb-6 md:mb-8 lg:mb-8'
 					variants={itemVariants}>
-					In 2011, after graduating from MEST, I co-founded Saya
-					Mobile. Saya brought rich mobile messaging to millions of
-					mass-market devices in emerging markets and was a TechCrunch
-					Disrupt Finalist in San Francisco in 2012. In 2014, Saya was
-					acquired by Kirusa, a US-based company.
+					My expertise encompasses the entire development stack, from
+					creating seamless user experiences with <strong>React.js</strong> to
+					developing robust back-end systems using <strong>Node.js</strong>,
+					<strong> Express.js</strong>, and <strong> MongoDB</strong>. I excel at designing modern,
+					intuitive interfaces with frameworks like <strong>Bootstrap</strong> and
+					<strong> Tailwind CSS</strong> while ensuring scalability and performance at
+					every application layer.
 				</motion.p>
 				<motion.p
-					className='text-md lg:text-justify lg:px-20'
+					className='text-md lg:text-justify lg:px-20 mb-4 sm:mb-6 md:mb-8 lg:mb-8'
 					variants={itemVariants}>
-					Since then, I have consulted, architect, developed and
-					deployed systems for both startups and multinationals. Over
-					the years, I have worked on projects ranging from mobile
-					messaging, social networking, social media, health
-					information and conversational AI systems.
+					Currently, I am exploring exciting new technologies such as <strong>React Native</strong>, <strong>Firebase</strong>, <strong>TypeScript</strong>,<strong> Next.js</strong>, <strong>PostgreSQL</strong>, and <strong>SQL</strong>. I am dedicated to continuously learning, growing, and experimenting with the latest tools and techniques.
 				</motion.p>
 			</motion.div>
 		</section>

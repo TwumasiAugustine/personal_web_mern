@@ -23,7 +23,7 @@ const FilterBar = ({ onFilterChange }) => {
 					<select
 						id='select'
 						onChange={handleCategoryChange}
-						className='mt-1 text-gray-800 bg-white block w-full pl-3 pr-10 py-2 text-base border-gray-500 border-[1px] focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded'>
+						className='mt-1 text-gray-800 bg-white block w-full pl-3 pr-10 py-2 text-base border-gray-500 border-[1px] focus:outline-none focus:ring-gray-500 focus:border-indigo-600 sm:text-sm rounded'>
 						<option value=''>All</option>
 						<option value='Web Development'>Web Development</option>
 						<option value='Data Science'>Web App</option>
@@ -36,7 +36,7 @@ const FilterBar = ({ onFilterChange }) => {
 						type='date'
 						inputMode='numeric'
 						onChange={handleDateChange}
-						className='mt-1 text-gray-800 block w-full pl-3 pr-10 py-2 text-base border-[1px] border-gray-500 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded'
+						className='mt-1 text-gray-800 block w-full pl-3 pr-10 py-2 text-base border-[1px] border-gray-500 focus:outline-none focus:ring-gray-500 focus:border-indigo-600 sm:text-sm rounded'
 					/>
 				</label>
 			</div>

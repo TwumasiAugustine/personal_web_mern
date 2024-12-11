@@ -17,14 +17,6 @@ const transporter = nodemailer.createTransport({
     debug: true
 })
 
-// Verify Connection
-transporter.verify((error, success) => {
-    if (error) {
-        console.log(error);
-    } else {
-        console.log('Server is ready to take messages');
-    }
-});
     
 const SendMessage = async (req, res) => {
     const { name, email, message } = req.body;

@@ -14,8 +14,7 @@ const SingleBlogPost = ({ post }) => {
 		summary,
 		_id,
 		likes,
-		author,
-		updatedAt,
+		author
 	} = post;
 
 	const postDate = new Date(createdAt);
@@ -23,10 +22,7 @@ const SingleBlogPost = ({ post }) => {
 	const timeAgo = formatDistanceToNow(new Date(post.createdAt), {
 		addSuffix: true,
 	});
-	const updatedDate = new Date(updatedAt);
-	const updatedTimeAgo = formatDistanceToNow(new Date(post.updatedAt), {
-		addSuffix: true,
-	});
+	
 	return (
 		<div className='mb-8'>
 			<div className='flex justify-center lg:items-center gap-5'>
@@ -55,8 +51,6 @@ const SingleBlogPost = ({ post }) => {
 						<span className='date'>{formattedDate}</span>
 						<span className='text-gray-400'>|</span>
 						<span className='time'>{timeAgo}</span>
-						<span className='text-gray-400'>Last Update</span>
-						<span className='updated'>{updatedTimeAgo}</span>
 					</div>
 
 					<div className='intro text-[15px] text-gray-800 mb-3 line-clamp-3'>

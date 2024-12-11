@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import SEO from '/src/pages/SEO';
 import Footer from '../Footer';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const Register = () => {
@@ -78,7 +78,7 @@ const Register = () => {
 			<h2 className='mb-5 p-2 font-bold text-xl'>Sign Up</h2>
 			<form
 				onSubmit={handleRegister}
-				className='text-black w-full max-w-[400px] shadow-md p-5'
+				className='text-black w-full max-w-[400px] border p-8 rounded-sm shadow-sm'
 			>
 				<input
 					required
@@ -151,7 +151,10 @@ const Register = () => {
 					type='submit'
 				>
 					{loading ? 'Signing Up...' : 'Sign Up'}
-				</button>
+					</button>
+					<div className="signin">
+						<p className='text-sm pt-4 text-right'>Already have an account? <Link className='ml-2 text-indigo-600 hover:underline' to='/blog/login'>Sign In</Link>  </p>   
+					</div>
 			</form>
 			</div>
 			<Footer />
