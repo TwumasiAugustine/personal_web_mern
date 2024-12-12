@@ -11,6 +11,7 @@ const ProjectCard = lazy(() =>
 const Project = () => {
 	const {
 		loading,
+		projectError,
 		projects,
 		handleProjectClick,
 	} = useContext(UserContext);
@@ -35,6 +36,24 @@ const Project = () => {
 		ease: 'anticipate',
 		duration: 0.5,
 	};
+
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center h-screen w-full text-black">
+				<p>Loading projects...</p>
+			</div>
+		);
+	}
+
+	if (projectError) {
+		return (
+			<div className="flex justify-center items-center h-screen w-full text-red-600">
+				<p>{projectError}</p>
+			</div>
+		);
+	}
+
+
 
 	return (
 		<>

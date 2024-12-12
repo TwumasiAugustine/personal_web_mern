@@ -1,5 +1,5 @@
 import '/src/styles/home.css';
-import myImg from '/src/assets/myphotoencoded.jpeg';
+import myImg from '../../assets/Twumasi Augustine.png';
 import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
@@ -92,7 +92,7 @@ const HeroSection = () => {
 						className='flex justify-center items-center w-full lg:w-1/2'>
 						<img
 							onContextMenu={(e) => e.preventDefault()}
-							className='rounded-full lg:w-[250px] lg:h-[250px] w-[150px] h-[150px] border-gray-800 border-[2px] md:border-[3px] lg:border-[5px]'
+							className='rounded-full lg:w-[250px] lg:h-[250px] w-[150px] h-[150px] border-gray-800 border-[2px] md:border-[3px] lg:border-[5px] bg-blend-color-burn'
 							src={myImg}
 							loading='lazy'
 							alt='Profile of Twumasi Augustine'

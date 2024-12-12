@@ -1,9 +1,14 @@
 /* eslint-disable react/prop-types */
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
 import { BiLike } from 'react-icons/bi';
 import { FaCommentDots } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import {serverURL} from '../../../config'
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
+
 
 const SingleBlogPost = ({ post }) => {
 	const {
@@ -22,15 +27,27 @@ const SingleBlogPost = ({ post }) => {
 	const timeAgo = formatDistanceToNow(new Date(post.createdAt), {
 		addSuffix: true,
 	});
-	
+	const [ref, inView] = useInView({
+        threshold: 0.5, 
+    });
+
+    const variants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+    };
 	return (
-		<div className='mb-8'>
+		<motion.div
+			ref={ref} 
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+			variants={variants}
+			className='mb-8'>
 			<div className='flex justify-center lg:items-center gap-5'>
 				<div className='flex-2'>
 					<img
 						loading='lazy'
 						className='img-fluid object-cover aspect-auto h-[80px] w-[80px] lg:w-[150px] lg:h-[120px] rounded-md'
-						src={`${serverUrl}/${path}`}
+						src={`${backendURL}/${path}`}
 						alt={title}
 					/>
 				</div>
@@ -71,7 +88,7 @@ const SingleBlogPost = ({ post }) => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

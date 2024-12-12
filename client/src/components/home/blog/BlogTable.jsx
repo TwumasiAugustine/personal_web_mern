@@ -5,7 +5,8 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { UserContext } from '../../../context/UserContext';
 const serverUrl = import.meta.env.VITE_SERVER_URL;
-
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 const UpdateBlog = lazy(() => import('../blog/UpdateBlog'));
 
 const BlogTable = () => {
@@ -21,7 +22,6 @@ const BlogTable = () => {
 	} = useContext(UserContext);
 
 	const [updatingBlogId, setUpdatingBlogId] = useState(null);
-
 	const handlePostsPerPageChange = (event) => {
 		setPostsPerPage(Number(event.target.value));
 	};
@@ -38,7 +38,7 @@ const BlogTable = () => {
     const userConfirmed = window.confirm('Are you sure you want to delete?');
     if (userConfirmed) {
         try {
-            const response = await axios.delete(`${serverUrl}/blog/post/${blogId}`);
+            const response = await axios.delete(`${backendURL}/blog/post/${blogId}`);
             if (response.status === 200) {
                 const updatedBlogPosts = blogPosts.filter((blogPost) => blogPost._id !== blogId);
                 setBlogPosts(updatedBlogPosts);

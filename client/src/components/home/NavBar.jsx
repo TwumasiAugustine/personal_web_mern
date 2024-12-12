@@ -4,8 +4,9 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import { navigation } from '../../data';
 import { UserContext } from '../../context/UserContext';
-
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const NavBar = () => {
 	const [openMenu, setOpenMenu] = useState(false);
@@ -26,7 +27,7 @@ const NavBar = () => {
 		const lowercasedQuery = searchQuery.toLowerCase();
 
 		try {
-			const response = await axios.get(`${serverUrl}/blog/search`, {
+			const response = await axios.get(`${backendURL}/blog/search`, {
 				params: { query: lowercasedQuery },
 			});
 			const { data } = response;
@@ -75,7 +76,7 @@ const NavBar = () => {
 	}, [showSearch]);
 
 	return (
-		<nav className='bg-gray-800 sticky top-0 z-50'>
+		<nav className='bg-gray-900 sticky top-0 z-50'>
 			<div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
 				<div className='flex h-16 items-center justify-between'>
 					<div className='flex items-center justify-between'>
@@ -133,8 +134,6 @@ const NavBar = () => {
 							</Menu>
 						</div>
 					</div>
-
-					{/* Search Icon and Bar */}
 					<div
 						className='relative lg:flex lg:items-center justify-center lg:ml-4 hidden'
 						>
@@ -251,6 +250,31 @@ const NavBar = () => {
 								</NavLink>
 							),
 					)}
+					<>
+						{userInfo?.data?.username && (
+							<>
+								{userRole === 'admin' && (
+									<NavLink
+										to='/dashboard'
+										className={({ isActive }) =>
+											`text-gray-300 px-3 py-2 rounded-md text-sm font-medium ${
+												isActive
+													? 'bg-gray-900 text-white'
+													: 'hover:bg-gray-700 hover:text-white'
+											}`
+										}>
+										Dashboard
+									</NavLink>
+								)}
+								<a
+									href='#'
+									onClick={handleLogout}
+									className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'>
+									Logout
+								</a>
+							</>
+						)}	
+					</>
 				</div>
 
 				{/* Search in Mobile */}

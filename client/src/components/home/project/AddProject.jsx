@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import axios from 'axios';
-
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const AddProject = () => {
 	const [formData, setFormData] = useState({
@@ -37,7 +38,7 @@ const AddProject = () => {
 
 		try {
 			const response = await axios.post(
-				`${serverUrl}/project`,
+				`${backendURL}/project`,
 				projectData,
 				{
 					headers: {

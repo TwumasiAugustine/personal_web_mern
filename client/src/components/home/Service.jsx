@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import {services} from '/src/data'
+import {services} from '../../data'
 
 const Service = () => {
 	return (

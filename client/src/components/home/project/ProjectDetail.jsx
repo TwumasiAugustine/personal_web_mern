@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import SEO from '../../../pages/SEO'
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const ProjectDetail = () => {
 	const { id } = useParams();
@@ -12,7 +14,7 @@ const ProjectDetail = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${serverUrl}/project/${id}`)
+			.get(`${backendURL}/project/${id}`)
 			.then((response) => {
 				setProject(response.data);
 				setLoading(false);
@@ -60,7 +62,7 @@ const ProjectDetail = () => {
 			<div className='relative w-full h-[300px] md:h-[400px] bg-gray-800 overflow-hidden'>
 				{/* Hero Section */}
 				<img
-					src={`${serverUrl}/${image}`}
+					src={`${backendURL}/${image}`}
 					alt={title}
 					className='w-full h-full object-cover opacity-50'
 				/>

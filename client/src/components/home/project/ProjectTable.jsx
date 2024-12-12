@@ -5,6 +5,8 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { UserContext } from '../../../context/UserContext';
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const UpdateProject = lazy(() => import('./UpdateProject'));
 
@@ -38,7 +40,7 @@ const ProjectTable = () => {
 		const userConfirmed = window.confirm('Are you sure you want to delete this project?');
 		if (userConfirmed) {
 			try {
-                const response = await axios.delete(`${serverUrl}/project/${projectId}`,
+                const response = await axios.delete(`${backendURL}/project/${projectId}`,
                     {withCredentials: true}
                 );
 				if (response.status === 200) {

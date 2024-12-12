@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { useState } from 'react';
 import ContactCard from '/src/components/home/contactCard.jsx';
-
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 const Contact = () => {
 	const [loading, setLoading] = useState(false);
 	const [formData, setFormData] = useState({
@@ -36,7 +39,7 @@ const Contact = () => {
 
 		try {
 			const response = await axios.post(
-				'http://localhost:4000/send_message',
+				`${backendURL}/send_message`,
 				{
 					name,
 					email,
@@ -48,7 +51,6 @@ const Contact = () => {
 			);
 
 			alert('Message sent successfully');
-			console.log(response.data);
 		} catch (error) {
 			console.error(error);
 			alert('Error sending message', error);

@@ -2,14 +2,16 @@
 import { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 const serverUrl = import.meta.env.VITE_SERVER_URL;
-
+import {serverURL} from '../config'
 export const UserContext = createContext({});
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 export const UserContextProvider = ({ children }) => {
     const [userInfo, setUserInfo] = useState({});
     const [blogPosts, setBlogPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [projectError, setProjectError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedProject, setSelectedProject] = useState(null);
@@ -26,10 +28,10 @@ export const UserContextProvider = ({ children }) => {
 
 	const fetchProjectData = async () => {
 		try {
-			const {data}= await axios.get(`${serverUrl}/project`);
+			const {data}= await axios.get(`${backendURL}/project`);
 			setProjects(data.project || []);
 		} catch (error) {
-			setError(error.message);
+			setProjectError(error.message);
 		} finally {
 			setLoading(false);
 		}
@@ -52,7 +54,7 @@ export const UserContextProvider = ({ children }) => {
     // Fetch User Data
     useEffect(() => {
         axios
-            .get(`${serverUrl}/profile`, { withCredentials: true })
+            .get(`${backendURL}/profile`, { withCredentials: true })
             .then((response) => setUserInfo(response.data))
             .catch((err) => console.error('Error fetching profile:', err));
     }, []);
@@ -61,20 +63,20 @@ export const UserContextProvider = ({ children }) => {
         setLoading(true);
         try {
             const response = await axios.get(
-                `${serverUrl}/blog/posts?page=${page}&limit=${postsPerPage}`,
+                `${backendURL}/blog/posts?page=${page}&limit=${postsPerPage}`,
             );
             setBlogPosts(response.data.posts);
             setTotalPages(response.data.totalPages);
-            setLoading(false);
         } catch (err) {
             console.error('Error fetching blog posts:', err);
             setError('Failed to load blog posts.');
+        } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchBlogPosts(currentPage);
+        fetchBlogPosts(currentPage, blogPosts);
     }, [currentPage, postsPerPage]); 
 
     const handlePrevPage = () => {
@@ -87,7 +89,7 @@ export const UserContextProvider = ({ children }) => {
 
     const handleLogout = async () => {
         try {
-            await axios.post(`${serverUrl}/logout`, {}, { withCredentials: true });
+            await axios.post(`${backendURL}/logout`, {}, { withCredentials: true });
             setUserInfo(null);
         } catch (error) {
             console.error('Error logging out:', error);
@@ -103,6 +105,7 @@ export const UserContextProvider = ({ children }) => {
                 setBlogPosts,
                 loading,
                 error,
+                projectError,
                 setCurrentPage,
                 currentPage,
                 fetchBlogPosts,

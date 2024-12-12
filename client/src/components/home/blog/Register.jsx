@@ -6,6 +6,8 @@ import Footer from '../Footer';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom'
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const Register = () => {
 	const [formData, setFormData] = useState({
@@ -38,7 +40,7 @@ const Register = () => {
 		setLoading(true);
 		try {
 			const response = await axios.post(
-				`${serverUrl}/blog/signup`,
+				`${backendURL}/blog/signup`,
 				{username, password, email, roles},
 				{
 					headers: { 'Content-Type': 'application/json' },

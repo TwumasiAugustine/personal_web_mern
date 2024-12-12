@@ -1,13 +1,15 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import { UserContext } from '../../../context/UserContext';
-
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const formats = [
     'bold',
@@ -75,7 +77,7 @@ const UpdateBlog = ({ blogId, onCancel }) => {
         const fetchBlogPost = async () => {
             setLoading(true);
             try {
-                const { data } = await axios.get(`${serverUrl}/blog/post/${blogId}`);
+                const { data } = await axios.get(`${backendURL}/blog/post/${blogId}`);
                 setFormData({
                     title: data.post.title,
                     summary: data.post.summary,
@@ -122,7 +124,7 @@ const UpdateBlog = ({ blogId, onCancel }) => {
         }
 
         try {
-            const response = await axios.put(`${serverUrl}/blog/post/${blogId}`, data, {
+            const response = await axios.put(`${backendURL}/blog/post/${blogId}`, data, {
                 headers: { 'Content-Type': 'multipart/form-data' },
                 withCredentials: true,
             });

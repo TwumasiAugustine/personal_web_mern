@@ -4,10 +4,10 @@ import { useInView } from 'react-intersection-observer';
 
 const Skill = () => {
 	return (
-		<div id='skills' className='bg-gray-800 text-white pb-12 sm:py-12 px-6 lg:px-8'>
+		<div id='skills' className='bg-gray-900 text-white pb-12 sm:py-12 px-6 lg:px-8'>
 			<div className='mx-auto max-w-7xl'>
 				<div className='mx-auto max-w-2xl lg:text-center'>
-					<h2 className='text-indigo-600 text-2xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl py-3'>
+					<h2 className='text-indigo-800 text-2xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl py-3'>
 						Skills
 					</h2>
 					<p className='mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl'>

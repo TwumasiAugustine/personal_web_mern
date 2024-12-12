@@ -3,12 +3,12 @@ import { social } from '../../data';
 
 const Footer = () => {
 	return (
-		<footer className='bg-gray-800 text-white py-4'>
+		<footer className='bg-gray-900 text-white py-4'>
 			<div className='container mx-auto px-4 lg:px-6'>
 				<div className='flex flex-col items-center lg:flex-row lg:justify-between'>
 					<div className='text-center lg:text-left mb-3 lg:mb-0'>
 						<p className='text-gray-400 text-sm'>
-							&copy; {new Date().getFullYear()}
+							Made with ❤️ by
 							<a
 								className='hover:underline hover:text-blue-600'
 								href='https://www.twumasiaugustine.com'
@@ -17,6 +17,9 @@ const Footer = () => {
 								{' '}
 								dev_twumstine.{' '}
 							</a>
+						</p>
+						<p className='text-gray-400 text-sm'>
+							&copy; {new Date().getFullYear()}{' '}
 							All rights reserved.
 						</p>
 					</div>
@@ -24,7 +27,7 @@ const Footer = () => {
 						{social.map((link) => (
 							<li key={link.id} className='list-inline-item flex'>
 								<a href={link.url} className='p-2 bg-white rounded-full'>
-									<link.icon className='text-gray-800 h-4 w-4' />
+									<link.icon className='text-indigo-800 h-4 w-4' />
 								</a>
 							</li>
 						))}

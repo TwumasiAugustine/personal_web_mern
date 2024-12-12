@@ -69,7 +69,7 @@ const Dashboard = () => {
                 <div className='p-4'>
                     <button
                         onClick={toggleSidebar}
-                        className='md:hidden p-2 bg-gray-800 text-sm text-white rounded shadow mb-4'>
+                        className='p-2 bg-gray-800 text-sm text-white rounded shadow mb-4'>
                         Toggle Menu
                     </button>
 

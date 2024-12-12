@@ -5,8 +5,9 @@ import { formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
 import SEO from '/src/pages/SEO';
 import Footer from '../Footer';
-
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const PostDetail = () => {
 	const { id } = useParams();
@@ -23,7 +24,7 @@ const PostDetail = () => {
 	// Fetch post data
 	useEffect(() => {
 		axios
-			.get(`${serverUrl}/blog/post/${id}`)
+			.get(`${backendURL}/blog/post/${id}`)
 			.then((response) => {
 				const { post, additionalPosts } = response.data;
 				setPost(post);
@@ -43,7 +44,7 @@ const PostDetail = () => {
 	// Handle like button click
 	const handleLike = async () => {
 		try {
-			await axios.post(`${serverUrl}/blog/post/${id}/like`, null, {
+			await axios.post(`${backendURL}/blog/post/${id}/like`, null, {
 				withCredentials: true,
 			});
 			setLikes(likes + 1);
@@ -66,7 +67,7 @@ const PostDetail = () => {
 		}
 		try {
 			const response = await axios.post(
-				`${serverUrl}/blog/post/${id}/comment`,
+				`${backendURL}/blog/post/${id}/comment`,
 				{ name, text: newComment },
 				{ withCredentials: true },
 			);
@@ -184,7 +185,7 @@ const PostDetail = () => {
 				</section>
 				<div className='mb-8 flex items-center gap-6'>
 					<button
-				        disabled
+						disabled
 						onClick={handleLike}
 						className='inline-flex justify-between px-4 py-2 bg-indigo-500 text-white text-sm font-semibold rounded hover:bg-indigo-600'>
 						👍 {likes}
@@ -246,7 +247,7 @@ const PostDetail = () => {
 						onSubmit={handleCommentSubmit}
 						className='mt-6'>
 						<input
-						    required
+							required
 							type='text'
 							id='name'
 							name='name'

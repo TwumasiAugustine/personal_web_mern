@@ -3,6 +3,8 @@ import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../../../context/UserContext';
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const UpdateTable = ({ projectId, onCancel }) => {
 
@@ -26,7 +28,7 @@ const UpdateTable = ({ projectId, onCancel }) => {
 
 			setLoading(true);
 			try {
-				const { data } = await axios.get(`${serverUrl}/project/${projectId}`, {
+				const { data } = await axios.get(`${backendURL}/project/${projectId}`, {
 					withCredentials: true,
 				});
 				
@@ -84,7 +86,7 @@ const UpdateTable = ({ projectId, onCancel }) => {
 		}
 
 		try {
-			const response = await axios.put(`${serverUrl}/project/${projectId}`, projectData, {
+			const response = await axios.put(`${backendURL}/project/${projectId}`, projectData, {
 				headers: { 'Content-Type': 'multipart/form-data' },
 				withCredentials: true,
 			});
@@ -180,7 +182,7 @@ const UpdateTable = ({ projectId, onCancel }) => {
 							<div>
 								<p className="text-sm font-medium">Image Preview:</p>
 								<img
-									src={`${serverUrl}/imagePreview`}
+									src={`${backendURL}/imagePreview`}
 									alt="Preview"
 									className="mt-2 w-[180px] border rounded"
 								/>

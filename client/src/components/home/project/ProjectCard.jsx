@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable react/prop-types */
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const ProjectCard = ({project}) => {
 	const {title, description,  tags, image, _id: id} = project;
@@ -17,7 +19,7 @@ const ProjectCard = ({project}) => {
 			<div className='relative'>
 				<img
 					loading='lazy'
-					src={`${serverUrl}/${image}`}
+					src={`${backendURL}/${image}`}
 					alt={title}
 					className='w-full h-36 sm:h-40 md:h-44 lg:h-48 object-cover rounded-t-md'
 				/>

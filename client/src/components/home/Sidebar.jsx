@@ -13,9 +13,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 			<div
 				className={`fixed top-0 left-0 h-screen bg-gray-800 text-white w-64 transform ${
 					isOpen ? 'translate-x-0 z-40' : '-translate-x-full'
-				} transition-transform duration-300 md:translate-x-0 md:static`}>
-				<div className='p-4 text-lg font-bold border-b border-gray-700'>
-					Admin Dashboard
+				} transition-transform duration-300`}>
+				<div className='p-4 text-lg font-bold border-b border-gray-700 flex justify-between items-center'>
+					<span>Admin Dashboard</span>
+					{/* Close button */}
+					<button
+						onClick={toggleSidebar}
+						className='text-white hover:text-gray-400 lg:hidden'
+					>
+						X
+					</button>
 				</div>
 				<nav className='mt-6'>
 					<NavLink
@@ -55,7 +62,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 						<FaProjectDiagram className='mr-3' /> Projects
 					</NavLink>
 				</nav>
-				<div className='flex flex-col justify-end a m-4'>
+				<div className='flex flex-col justify-end m-4'>
 					<p className='text-sm mb-4'>
 						Welcome, {userInfo.data?.username}
 					</p>
@@ -66,9 +73,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 			{isOpen && (
 				<div
 					onClick={toggleSidebar}
-					className='fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden'
+					className='fixed inset-0 z-30 bg-black bg-opacity-50'
 				/>
 			)}
+
 		</>
 	);
 };

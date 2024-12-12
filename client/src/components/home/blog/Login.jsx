@@ -7,6 +7,8 @@ import SEO from '/src/pages/SEO';
 import Footer from '../Footer';
 import {UserContext} from '../../../context/UserContext'
 const serverUrl = import.meta.env.VITE_SERVER_URL;
+import { serverURL } from '../../../config';
+const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender.com';
 
 const Login = () => {
 	const [formData, setFormData] = useState({
@@ -33,7 +35,7 @@ const Login = () => {
     setLoading(true);
     try {
         const response = await axios.post(
-            `${serverUrl}/blog/login`,
+            `${backendURL}/blog/login`,
             { username, password },
             {
                 headers: { 'Content-Type': 'application/json' },
