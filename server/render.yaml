@@ -1,0 +1,12 @@
+services:
+  - name: personal-web-mern
+    type: web
+    region: oregon
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    branch: main
+    autoDeploy: true
+    runtime: node  
+    plan: free    
+    healthCheckPath: "/"  
+
