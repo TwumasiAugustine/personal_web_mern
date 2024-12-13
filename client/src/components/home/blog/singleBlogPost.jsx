@@ -14,7 +14,6 @@ const SingleBlogPost = ({ post }) => {
 	const {
 		path,
 		title,
-		createdAt,
 		comments,
 		summary,
 		_id,
@@ -22,8 +21,7 @@ const SingleBlogPost = ({ post }) => {
 		author
 	} = post;
 
-	const postDate = new Date(createdAt);
-	const formattedDate = postDate.toLocaleDateString();
+
 	const timeAgo = formatDistanceToNow(new Date(post.createdAt), {
 		addSuffix: true,
 	});
@@ -54,29 +52,27 @@ const SingleBlogPost = ({ post }) => {
 				<div className='flex-1'>
 					<h3 className='title mb-1'>
 						<Link
-							className='text-link text-xl font-bold py-2 hover:underline'
+							className='text-link text-md lg:text-xl font-bold py-2 hover:underline'
 							to={`/blog/${_id}`}>
 							{title}
 						</Link>
 					</h3>
 					<div className='flex flex-wrap items-center gap-4 text-[12px] text-gray-500 mb-3'>
 						<div className='flex items-center gap-2'>
-							<span className='text-gray-400'>Published by</span>
+							<span className='text-gray-400'>By</span>
 							<span className='font-semibold'>{author}</span>
 						</div>
-						<span className='text-gray-400'>|</span>
-						<span className='date'>{formattedDate}</span>
 						<span className='text-gray-400'>|</span>
 						<span className='time'>{timeAgo}</span>
 					</div>
 
-					<div className='intro text-[15px] text-gray-800 mb-3 line-clamp-3'>
+					<div className='intro text-sm lg:text-md text-gray-800 mb-3 line-clamp-3'>
 						{summary}
 					</div>
 					<Link
 						className='text-link text-sm hover:underline text-indigo-600'
 						to={`/blog/${_id}`}>
-						Read more →
+						Read more...
 					</Link>
 					<div className='flex gap-10 text-gray-600 text-sm mt-3'>
 						<span className='flex items-center gap-1 cursor-pointer'>

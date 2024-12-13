@@ -95,7 +95,7 @@ const BlogTable = () => {
 			</div>
 			<table className="table-auto w-full bg-white shadow rounded">
 				<thead className="bg-gray-200">
-					<tr className="text-center">
+					<tr className="text-sm lg:text-md">
 						<th className="px-4 py-2">#</th>
 						<th className="px-4 py-2">Title</th>
 						<th className="px-4 py-2">Author</th>
@@ -104,22 +104,22 @@ const BlogTable = () => {
 				</thead>
 				<tbody>
 					{blogPosts.map((blog, index) => (
-						<tr key={blog._id} className="border-t text-center">
-							<td className="px-4 py-2">{index + 1}</td>
-							<td className="px-4 py-2">{blog.title}</td>
-							<td className="px-4 py-2">{blog?.author}</td>
-							<td className="px-4 py-2 flex justify-center items-center gap-x-8">
+						<tr key={blog._id} className="border-t">
+							<td className="px-4 text-sm lg:text-lg sm:text-xs py-2">{index + 1}</td>
+							<td className="px-4 text-sm lg:text-lg sm:text-xs py-1 sm:line-clamp-2 line-clamp-2">{blog.title}</td>
+							<td className="px-4 text-sm lg:text-lg sm:text-xs py-2">{blog?.author}</td>
+							<td className="px-4 text-sm lg:text-lg sm:text-xs py-2 flex justify-center items-center gap-4">
 								<button
 									className="text-sm text-blue-500 hover:text-blue-700"
 									onClick={() => handleUpdateClick(blog._id)}
 								>
-									<FaEdit /> Update
+									<FaEdit size={24} />
 								</button>
 								<button
 									className="text-sm text-red-500 hover:text-red-700"
 									onClick={() => handleDeleteClick(blog._id)}
 								>
-									<FaTrash /> Delete
+									<FaTrash size={20} /> 
 								</button>
 							</td>
 						</tr>

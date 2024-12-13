@@ -104,7 +104,7 @@ const HeroSection = () => {
 						transition={{ duration: 1, delay: 0.5 }}
 						className='text-center w-full lg:w-1/2'>
 						<div className='min-w-max p-2'>
-							<span className='whitespace-nowrap typing text-indigo-600 text-3xl lg:text-4xl font-bold p-2 font-mono'>
+							<span className='whitespace-nowrap  text-indigo-600 sm:text-md text-3xl lg:text-4xl font-bold p-4 font-mono'>
 								{texts[textIndex].slice(0, charIndex)}
 							</span>
 						</div>

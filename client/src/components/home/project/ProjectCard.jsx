@@ -8,6 +8,7 @@ const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender
 const ProjectCard = ({project}) => {
 	const {title, description,  tags, image, _id: id} = project;
 	const navigate = useNavigate();
+	console.log(project)
 
 	// Convert tags string into an array of hashtags
 	const tagArray = tags ? tags.split(',').map((tag) => tag.trim()) : [];

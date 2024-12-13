@@ -153,7 +153,7 @@ const Contact = () => {
 								onChange={handleMessageChange}
 							/>
 							<p className='float-end text-sm text-gray-500 mt-2'>
-								{message.trim().split(/\s+/).length}/50
+								{message.trim().split(/\s+/).length}/50 {message.trim().split(/\s+/).length > 1 ? 'words' : 'word'}
 							</p>
 						</div>
 						<div className='sm:col-span-2'>

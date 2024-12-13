@@ -11,12 +11,13 @@ export const UserContextProvider = ({ children }) => {
     const [blogPosts, setBlogPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [projectError, setProjectError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+
     const [selectedProject, setSelectedProject] = useState(null);
-	const [projects, setProjects] = useState({});
-	
+	const [projects, setProjects] = useState([]);
+	const [projectError, setProjectError] = useState(null)
 
 	const handleProjectClick = (project) => {
 		setSelectedProject(project);
@@ -29,9 +30,9 @@ export const UserContextProvider = ({ children }) => {
 	const fetchProjectData = async () => {
 		try {
 			const {data}= await axios.get(`${backendURL}/project`);
-			setProjects(data.project || []);
+			setProjects(data.project);
 		} catch (error) {
-			setProjectError(error.message);
+			setProjectError("Error fetching projects" || error.message);
 		} finally {
 			setLoading(false);
 		}
@@ -69,7 +70,7 @@ export const UserContextProvider = ({ children }) => {
             setTotalPages(response.data.totalPages);
         } catch (err) {
             console.error('Error fetching blog posts:', err);
-            setError('Failed to load blog posts.');
+            setError('Failed to load blog posts.' );
         } finally {
             setLoading(false);
         }

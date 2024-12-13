@@ -43,26 +43,18 @@ const About = () => {
 				<motion.p
 					className='text-md lg:text-justify lg:px-20 mb-4 sm:mb-6 md:mb-8 lg:mb-8'
 					variants={itemVariants}>
-					I am a passionate full-stack web developer with over three
-					(3) years of experience building dynamic, responsive, and
-					accessible web applications that empower individuals and
-					businesses.
+					I'm a full-stack web developer passionate about creating dynamic, responsive, and accessible web applications that empower individuals and businesses. With over three years of experience, I've honed my skills across the entire development stack.
 				</motion.p>
 				<motion.p
 					className='text-md lg:text-justify lg:px-20 mb-4 sm:mb-6 md:mb-8 lg:mb-8'
 					variants={itemVariants}>
-					My expertise encompasses the entire development stack, from
-					creating seamless user experiences with <strong>React.js</strong> to
-					developing robust back-end systems using <strong>Node.js</strong>,
-					<strong> Express.js</strong>, and <strong> MongoDB</strong>. I excel at designing modern,
-					intuitive interfaces with frameworks like <strong>Bootstrap</strong> and
-					<strong> Tailwind CSS</strong> while ensuring scalability and performance at
-					every application layer.
+					I specialize in building smooth user experiences with <strong>React.js</strong> while crafting robust back-end systems using <strong>Node.js</strong>,<strong> Express.js</strong>, and <strong>MongoDB</strong>. Designing modern, intuitive interfaces is something I truly enjoy, and I often turn to frameworks like <strong>Bootstrap</strong> and <strong>Tailwind CSS </strong> to achieve that. Throughout all my projects, I prioritize scalability and performance, ensuring that every layer of the application is well thought out.
 				</motion.p>
 				<motion.p
 					className='text-md lg:text-justify lg:px-20 mb-4 sm:mb-6 md:mb-8 lg:mb-8'
 					variants={itemVariants}>
-					Currently, I am exploring exciting new technologies such as <strong>React Native</strong>, <strong>Firebase</strong>, <strong>TypeScript</strong>,<strong> Next.js</strong>, <strong>PostgreSQL</strong>, and <strong>SQL</strong>. I am dedicated to continuously learning, growing, and experimenting with the latest tools and techniques.
+					Lately, I've been diving into some exciting new technologies, including <strong>React Native</strong>,<strong> Firebase</strong>
+					,<strong> TypeScript</strong>, <strong>Next.js</strong>, <strong>PostgreSQL</strong>, and <strong>SQL</strong>. I'm fully committed to continuous learning and growth, always eager to explore state-of-the-art tools and techniques. Each project is a chance for me to innovate and push my skills further.
 				</motion.p>
 			</motion.div>
 		</section>

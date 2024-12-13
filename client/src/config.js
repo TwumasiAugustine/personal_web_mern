@@ -1,2 +1,2 @@
 // config.js
-export  const serverURL ='https://personal-web-mern.onrender.com';
+export  const serverURL ='http://localhost:4001';

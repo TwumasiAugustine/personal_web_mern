@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, useEffect, useCallback } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { NavLink, Outlet } from 'react-router-dom';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
@@ -10,10 +10,8 @@ const backendURL = serverURL || serverUrl || 'https://personal-web-mern.onrender
 
 const NavBar = () => {
 	const [openMenu, setOpenMenu] = useState(false);
-	const [showSearch, setShowSearch] = useState(false);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [searchResults, setSearchResults] = useState([]);
-	const searchRef = useRef(null);
 
 	const { userInfo, handleLogout } = useContext(UserContext);
 	const userRole = userInfo?.data?.roles[0];
@@ -54,26 +52,6 @@ const NavBar = () => {
 	useEffect(() => {
 		handleSearch();
 	}, [searchQuery, handleSearch]);
-
-	const handleClickOutside = (event) => {
-		if (searchRef.current && !searchRef.current.contains(event.target)) {
-			setShowSearch(false);
-			setSearchQuery('');
-			setSearchResults([]);
-		}
-	};
-
-	useEffect(() => {
-		if (showSearch) {
-			document.addEventListener('click', handleClickOutside);
-		} else {
-			document.removeEventListener('click', handleClickOutside);
-		}
-
-		return () => {
-			document.removeEventListener('click', handleClickOutside);
-		};
-	}, [showSearch]);
 
 	return (
 		<nav className='bg-gray-900 sticky top-0 z-50'>
@@ -237,6 +215,7 @@ const NavBar = () => {
 						(item) =>
 							item.to && (
 								<NavLink
+									onClick={() => setOpenMenu(!openMenu)}
 									key={item.id}
 									to={item.to}
 									className={({ isActive }) =>
@@ -256,6 +235,7 @@ const NavBar = () => {
 								{userRole === 'admin' && (
 									<NavLink
 										to='/dashboard'
+										onClick={() => setOpenMenu(!openMenu)}
 										className={({ isActive }) =>
 											`text-gray-300 px-3 py-2 rounded-md text-sm font-medium ${
 												isActive
@@ -284,7 +264,7 @@ const NavBar = () => {
 						value={searchQuery}
 						autoFocus
 						onChange={(e) => setSearchQuery(e.target.value)}
-						placeholder='Search...'
+						placeholder='Search blog...'
 						className='w-full px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
 					/>
 					{searchQuery && (

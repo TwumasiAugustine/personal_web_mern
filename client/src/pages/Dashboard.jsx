@@ -56,7 +56,7 @@ const Dashboard = () => {
     const currentView = views[activeView] || views.blogs;
 
     return (
-        <div className='flex h-screen'>
+        <div className='container'>
             <SEO
                 title={`Dashboard | ${activeView}`}
                 description={`Dashboard to manage ${activeView}`}
@@ -65,29 +65,32 @@ const Dashboard = () => {
             />
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-            <div className='flex-1'>
+            <div className=''>
                 <div className='p-4'>
-                    <button
-                        onClick={toggleSidebar}
-                        className='p-2 bg-gray-800 text-sm text-white rounded shadow mb-4'>
-                        Toggle Menu
-                    </button>
+                    <div className='flex justify-between'>
+                        <button
+                            onClick={toggleSidebar}
+                            className='p-2 bg-gray-800 text-sm text-white rounded shadow mb-4'>
+                            Toggle Menu
+                        </button>
+                        <h1 className='lg:text-xl  text-sm font-bold'>{currentView.title}</h1>
+                    </div>
 
                     <div className='flex justify-between items-center mb-4'>
-                        <h1 className='text-xl font-bold'>{currentView.title}</h1>
+                        
                         <div className='flex gap-4'>
                             {currentView.buttons.map(({ view, label, color }) => (
                                 <button
                                     key={view}
                                     onClick={() => setActiveView(view)}
-                                    className={`px-4 py-2 text-sm ${color} text-white rounded`}>
+                                    className={`px-4 py-2 sm:text-xs text-sm ${color} text-white rounded`}>
                                     {label}
                                 </button>
                             ))}
                         </div>
                     </div>
 
-                    <Suspense fallback={<div className='flex justify-center items-center h-screen text-black'>Loading...</div>}>
+                    <Suspense fallback={<div className='flex justify-center items-center  text-black'>Loading...</div>}>
                         {currentView.component}
                     </Suspense>
                 </div>

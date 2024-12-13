@@ -117,13 +117,14 @@ const ProjectDetail = () => {
 								Explore the live version of this project and see
 								it in action!
 							</p>
+							<p className='text-gray-600 mb-4'>Click the link below to view the project:</p>
 							<a
 								href={url}
 								target='_blank'
 								title='View Project'
 								rel='noopener noreferrer'
-								className='inline-block bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-medium text-lg py-3 px-8 rounded-md shadow-md hover:scale-105 transition-transform hover:shadow-lg'>
-								🌟 Click Here to View the Project 🌟
+								className='inline-block bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-medium text-lg sm:px-4 py-3 px-8 rounded-md shadow-md hover:scale-105 transition-transform hover:shadow-lg sm:text-sm md:text-sm'>
+								🌟 View the Project 🌟
 							</a>
 						</section>
 					)}

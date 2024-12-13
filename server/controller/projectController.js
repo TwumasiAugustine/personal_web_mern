@@ -61,7 +61,7 @@ const page = parseInt(req.query.page) || 1;
 		});
 	} catch (err) {
 		console.error('Error fetching project:', err.message);
-		res.status(500).json({ message: 'Failed to fetch project' });
+		res.status(500).json({ message: 'Failed to fetch project' , error: err.message});
 	}
 }
 // Get project by ID

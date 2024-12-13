@@ -69,7 +69,7 @@ const BlogPosts = () => {
 					<FaArrowLeft />
 					<span>Prev</span>
 				</button>
-				<span className="text-gray-700">
+				<span className="text-gray-700 text-sm">
 					Page {currentPage} of {totalPages}
 				</span>
 				<button

@@ -12,7 +12,6 @@ const authenticate = (roles = []) => (req, res, next) => {
 		// Verify token
 		const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
-		// Role-based access control
 		if (
 			roles.length > 0 &&
 			(!decoded.roles || !roles.some((role) => decoded.roles.includes(role)))
@@ -22,9 +21,8 @@ const authenticate = (roles = []) => (req, res, next) => {
 				.json({ message: 'Access denied. Insufficient permissions.' });
 		}
 
-		// Attach user to request
-        req.user = { ...decoded, id: decoded.userId };
-        console.log(req.user)
+        req.user = { ...decoded, id: decoded._userId };
+
 		next();
 	} catch (err) {
 		// Handle token verification errors
