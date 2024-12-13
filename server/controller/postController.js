@@ -2,9 +2,28 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const Post = require('../model/PostModel');
+const { v4: uuidv4 } = require('uuid');
 
-
-const UploadFile = multer({ dest: 'uploads/' });
+const UploadFile = multer({
+	dest: 'uploads/',
+	fileFilter: (req, file, cb) => {
+		const allowedTypes = [
+			'image/jpeg',
+			'image/png',
+			'image/gif',
+			'image/jpg',
+			'image/webp',
+			'image/avif',
+		];
+		if (!allowedTypes.includes(file.mimetype)) {
+			return cb(
+				new Error('Invalid file type. Only images are allowed.'),
+				false,
+			);
+		}
+		cb(null, true);
+	},
+});
 
 const PostBlog = async (req, res) => {
 	try {
@@ -21,10 +40,22 @@ const PostBlog = async (req, res) => {
 			return res.status(400).json({ message: 'File size exceeds 5MB.' });
 		}
 
-		const filename = path.basename(thumbnail.originalname);
+		const filename = `${uuidv4()}-${thumbnail.originalname}`;
 		const uploadDir = path.dirname(thumbnail.path);
 		const newFilePath = path.join(uploadDir, filename);
-		fs.renameSync(thumbnail.path, newFilePath);
+
+		// Make sure the directory exists
+		if (!fs.existsSync(uploadDir)) {
+			fs.mkdirSync(uploadDir, { recursive: true });
+		}
+
+		// Rename the file asynchronously
+		fs.rename(thumbnail.path, newFilePath, (err) => {
+			if (err) {
+				console.error('Error renaming file:', err);
+				return res.status(500).json({ message: 'Error saving file.' });
+			}
+		});
 
 		const post = await Post.create({
 			title,
@@ -75,7 +106,6 @@ const GetPostById = async (req, res) => {
 			return res.status(404).json({ message: 'Post not found' });
 		}
 
-		// Find the index of the current post
 		const postIndex = posts.findIndex((p) => p._id.toString() === postId);
 
 		// Get the previous and next posts based on the index
@@ -105,7 +135,7 @@ const UpdatePost = async (req, res) => {
 	const { id } = req.params;
 	const { title, content, summary } = req.body;
 	const thumbnail = req.file;
-	
+
 	try {
 		const updatedPost = await Post.findByIdAndUpdate(
 			id,
@@ -143,7 +173,7 @@ const DeletePost = async (req, res) => {
 		// Delete the image file from the server (if it exists)
 		const imagePath = post.path;
 		if (fs.existsSync(imagePath)) {
-			fs.unlinkSync(imagePath); 
+			fs.unlinkSync(imagePath);
 		}
 
 		await Post.findByIdAndDelete(id);
@@ -155,25 +185,23 @@ const DeletePost = async (req, res) => {
 	}
 };
 
-
 // Search Post
 const SearchPosts = async (req, res) => {
-	
 	try {
-		const { query } = req.query
+		const { query } = req.query;
 		const posts = await Post.find({
 			$or: [
 				{ title: { $regex: query, $options: 'i' } },
 				{ content: { $regex: query, $options: 'i' } },
 				{ summary: { $regex: query, $options: 'i' } },
-			]
-		})
-		res.status(200).json( posts );
+			],
+		});
+		res.status(200).json(posts);
 	} catch (err) {
 		console.error('Error searching posts:', err.message);
-        res.status(500).json({ message: 'Failed to search posts' });
+		res.status(500).json({ message: 'Failed to search posts' });
 	}
-}
+};
 // Add a comment
 const AddComment = async (req, res) => {
 	const { id } = req.params;
@@ -189,7 +217,6 @@ const AddComment = async (req, res) => {
 			return res.status(404).json({ error: 'Post not found' });
 		}
 
-		
 		const comment = {
 			name,
 			text,
