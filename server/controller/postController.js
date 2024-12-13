@@ -132,20 +132,31 @@ const UpdatePost = async (req, res) => {
 //  Delete Post by id
 const DeletePost = async (req, res) => {
 	const { id } = req.params;
+
 	try {
-		const post = await Post.findByIdAndDelete(id);
+		const post = await Post.findById(id);
+
 		if (!post) {
 			return res.status(404).json({ message: 'Post not found' });
 		}
-		res.json({ message: 'Post deleted successfully' });
+
+		// Delete the image file from the server (if it exists)
+		const imagePath = post.path;
+		if (fs.existsSync(imagePath)) {
+			fs.unlinkSync(imagePath); 
+		}
+
+		await Post.findByIdAndDelete(id);
+
+		res.json({ message: 'Post and image deleted successfully' });
 	} catch (err) {
 		console.error('Error deleting post:', err.message);
 		res.status(500).json({ message: 'Failed to delete post' });
 	}
 };
 
-// Search Post
 
+// Search Post
 const SearchPosts = async (req, res) => {
 	
 	try {
@@ -163,7 +174,7 @@ const SearchPosts = async (req, res) => {
         res.status(500).json({ message: 'Failed to search posts' });
 	}
 }
-// FIX Add a comment
+// Add a comment
 const AddComment = async (req, res) => {
 	const { id } = req.params;
 	const { text, name } = req.body;

@@ -81,19 +81,32 @@ const GetProjectById = async(req, res) => {
 }
 
 // Delete project by ID
+
 const DeleteProjectById = async (req, res) => {
 	const { id } = req.params;
-    try {
-        const project = await Project.findByIdAndDelete(id);
-        if (!project) {
-            return res.status(404).json({ message: 'Project not found' });
-        }
-        res.json({ message: 'Project deleted successfully' });
-    } catch (err) {
-        console.error('Error deleting project:', err.message);
-        res.status(500).json({ message: 'Failed to delete project' });
-    }
-}
+	try {
+		
+		const project = await Project.findById(id);
+console.log(project)
+		if (!project) {
+			return res.status(404).json({ message: 'Project not found' });
+		}
+
+		// Delete the image file from the server (if it exists)
+		const imagePath = project.image; 
+		if (fs.existsSync(imagePath)) {
+			fs.unlinkSync(imagePath); 
+		}
+
+		await Project.findByIdAndDelete(id);
+
+		res.json({ message: 'Project and image deleted successfully' });
+	} catch (err) {
+		console.error('Error deleting project:', err.message);
+		res.status(500).json({ message: 'Failed to delete project' });
+	}
+};
+
 
 // Update Project by Id
 const UpdateProject = async (req, res) => {
